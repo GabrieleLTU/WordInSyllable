@@ -3,13 +3,16 @@
 //use ExecutionTimer as ;
 
 require 'PrintFunctions.php';
+require 'IntoSyllable\IntoSyllable.php';
 require 'IntoSyllableFunctions.php';
 include 'ExecutionTimer\ExecutionTimer.php';
 
  echo "Input: ";
  $input = fopen ("php://stdin","r");
  $word = trim(fgets($input));
-
+//new:
+  $inputWord = new WordInSyllable ($word);
+  //var_dump($inputWord);
  /*while (strlen ($input)<1) {
    $read = fopen ("php://stdin","r");
    $input = fgets($read);
@@ -27,14 +30,17 @@ $ExecTime->startTime();
 while (!$file->eof()) {
     $syllable = $file->current();
     $position = CheckWord($word, trim($syllable), $position);
+    //new:
+    $inputWord->checkWord(trim($syllable));
     $file->next();
 }
 
 $ExecTime->endTime();
 
 echo "\nResult: ";
-//print_r($position); //print all array
+print_r($position); //print all array
 printWordBySillable($word, $position);// print words into syllables
+var_dump($inputWord);
 $ExecTime->getExecutionTime();
 
 ?>
