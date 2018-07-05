@@ -5,11 +5,6 @@
     protected $word;
     protected $syllableWord;
 
-  /*  function __construct()
-    {
-      // code...
-    }*/
-
     function __construct($word)
     {
       $this->word = $word;

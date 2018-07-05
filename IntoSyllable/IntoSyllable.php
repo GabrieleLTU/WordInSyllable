@@ -5,22 +5,16 @@
   {
     private $possition;
 
-    /*function __construct()
-    {
-      //parameter: int $start_index , int $num , mixed $value
-      $position = array_fill (0,strlen ($this->word), 0);
-    }*/
-
     function __construct($word)
     {
       $this->word = $word;
-      //parameter: int $start_index , int $num , mixed $value
-      $this->position = array_fill (0,strlen ($word), 0);
     }
 
-
-    function checkWord ($syllable)
+    public function checkWord ($syllable)
     {
+      //parameter: int $start_index , int $num , mixed $value
+      $this->position = array_fill (0,strlen ($this->word), 0);
+
       $syllableNoNumber = preg_replace('/[0-9]+/', '', $syllable);
       $syllableNoNumber = str_replace('.','',$syllableNoNumber);
 
@@ -61,7 +55,7 @@
       }
     }
 
-    function checkAnywereInWord ($syllable, $searchStart)
+   private function checkAnywereInWord ($syllable, $searchStart)
     {
       $syllableNoNumber = preg_replace('/[0-9]+/', '', $syllable);
       $syllableNoNumber = str_replace('.','',$syllableNoNumber);
@@ -75,7 +69,7 @@
       }
     }
 
-    function changePosition($syllable, $sylStart)
+    private function changePosition($syllable, $sylStart)
     {
       $position = $this->position;
       $syllable = str_replace('.','',$syllable);
