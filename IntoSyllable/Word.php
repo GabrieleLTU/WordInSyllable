@@ -3,7 +3,7 @@
   class Word
   {
     protected $word;
-    protected $syllableWord;
+  //  protected $syllableWord;
 
     function __construct($word)
     {
@@ -16,25 +16,24 @@
     }
 
 
-    public function setsyllableWord($syllableWord)
+    /*public function setsyllableWord($syllableWord)
     {
       $this->syllableWord = $syllableWord;
     }
+    public function getSyllableWord()
+    {
+      return $this->syllableWord;
+    }*/
 
     public function getWord()
     {
       return $this->word;
     }
 
-    public function getSyllableWord()
-    {
-      return $this->syllableWord;
-    }
-
     public function printAllWordData()
     {
-      echo "\nWord: ".$this->word.
-            "\nWord in syllable: ".$this->$syllableWord."\n";
+      echo "\nWord: ".$this->word;//.
+            //"\nWord in syllable: ".$this->$syllableWord."\n";
     }
   }
 

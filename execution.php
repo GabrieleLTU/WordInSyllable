@@ -2,90 +2,118 @@
 
   class Execution
   {
-    public static function wordsInSyllable ()
+    public function execute ()
     {
-      do {
-        echo "c - input in console;\nf - input from file;\ne - exit.\n"
-        $input = fopen ("php://stdin","r");
-        $choice= trim(fgets($input));
-
-        switch ($choice)
-        		{
-        			case 'c':
-        				break;
-              case 'f':
-          			break;
-                case 'e':
-            			break;
-        			default:
-        			   echo "Your choice is not correct. Please choose again.";
-        			   break;
-        		}
-      }
-      while ($choice!="e");
+      $wordsList = $this->getWords();
+      $syllablesList = $this->getSyllables();
+      $syllabledWordsList = $this->wordsInSyllableAlgorithm ($wordsList, $syllablesList);
+      $this->outputContent($syllabledWordsList);
     }
 
-    private function wordsInSyllableAlgorithm ($words, $syllables)
+    public function wordsInSyllableAlgorithm ($words, $syllables)
     {
+      $syllabledWordsList = [];
       for ($i=0; $i < sizeof($words); $i++)
       {
         $oneWord = new WordInSyllable($words[$i]);
-        for ($j=0; $j < sizeof($syllables); $j++) {
+        for ($j=0; $j < sizeof($syllables); $j++)
+        {
           $oneWord->checkWord($syllables[$j]);
+          $syllabledWordsList[] = $oneWord->getSyllableWord();
         }
+      }
+      return $syllabledWordsList;
+    }
 
+    private function getWords ()
+    {
+      $wordsList = [];
+      echo "c - input word(s) in console;\nf - input word(s) from file;\n";
+      $input = fopen ("php://stdin","r");
+      $choice = trim(fgets($input));
+
+      switch ($choice)
+      		{
+      			case 'c':
+              $wordsList = $this->getDataFromConsole();
+      				break;
+            case 'f':
+              $wordsList = $this->getDataFromFile();
+        			break;
+      			default:
+      			   echo "Your choice is not correct. \n";
+      			   break;
+      		}
+      return $wordsList;
+    }
+
+    private function getSyllables ()
+    {
+      $syllablesList = [];
+      echo "c - input syllable(s) in console;\nf - input syllable(s) from file;\n";
+      $input = fopen ("php://stdin","r");
+      $choice = trim(fgets($input));
+
+      switch ($choice)
+      		{
+      			case 'c':
+              $syllablesList = $this->getDataFromConsole();
+      				break;
+            case 'f':
+              $syllablesList = $this->getDataFromFile();
+        			break;
+      			default:
+      			   echo "Your choice is not correct.\n";
+      			   break;
+      		}
+
+      return $syllablesList;
+    }
+
+    private function getDataFromFile()
+    {
+      $file = new WorkWithFile;
+      $file->setFile("https://gist.githubusercontent.com/cosmologicon/1e7291714094d71a0e25678316141586/raw/006f7e9093dc7ad72b12ff9f1da649822e56d39d/tex-hyphenation-patterns.txt");
+      $file->inputContent();//Data\syllable_example.txt");//
+      $file->setFile('Data\filename.txt');
+      return $file->getContent();
+    }
+
+    private function getDataFromConsole()
+    {
+      $fromConsole = new WorkWithConsole;
+      $fromConsole->inputContent();
+      $word = ($fromConsole->getContent())[0];
+      return $fromConsole->getContent();
+    }
+
+    private function outputContent ($outputData)
+    {
+      echo "Output data to:\nc - n console;\nf -  file;\n";
+      $input = fopen ("php://stdin","r");
+      $choice = trim(fgets($input));
+
+      switch ($choice)
+      		{
+      			case 'c':
+              $output = new WorkWithConsole();
+      				break;
+            case 'f':
+              $output = new WorkWithFile();
+              $output->setFile('Data\filename.txt');
+        			break;
+              case 'e':
+          			break;
+      			default:
+      			   echo "Your choice is not correct. Please choose again.";
+      			   break;
+      		}
+
+      if (isset($output)) {
+        $output->setContent($outputData);
+        $output->outputContent();
       }
 
     }
-
   }
-
-
-
-
-
-/*$pathFile = new WorkWithFile;
-$pathFile->setFile("https://gist.githubusercontent.com/cosmologicon/1e7291714094d71a0e25678316141586/raw/006f7e9093dc7ad72b12ff9f1da649822e56d39d/tex-hyphenation-patterns.txt");
-$pathFile->readContent();//Data\syllable_example.txt");//
-$pathFile->setFile('Data\filename.txt');
-$pathFile->outputContent();
-die();*/
-
- $fromConsole = new WorkWithConsole;
- $fromConsole->inputContent();
- $word = ($fromConsole->getContent())[0];
- $fromConsole->outputContent();
-//new:
-  $inputWord = new WordInSyllable ($word);
-  //var_dump($inputWord);
- /*while (strlen ($input)<1) {
-   $read = fopen ("php://stdin","r");
-   $input = fgets($read);
- }*/
-
-$position = array_fill (0,strlen ($word), 0);//int $start_index , int $num , mixed $value
-//print_r($position); //print all array
-
-$file = new SplFileObject("https://gist.githubusercontent.com/cosmologicon/1e7291714094d71a0e25678316141586/raw/006f7e9093dc7ad72b12ff9f1da649822e56d39d/tex-hyphenation-patterns.txt");
-//$file = new SplFileObject("Data\syllable_example.txt");
-$ExecTime = new ExecutionTimer;
-//$ExecTime = new ExecutionTimer();
-$ExecTime->startTime();
-
-while (!$file->eof()) {
-    $syllable = $file->current();
-    $position = CheckWord($word, trim($syllable), $position);
-    //new:
-    $inputWord->checkWord(trim($syllable));
-    $file->next();
-}
-
-$ExecTime->endTime();
-
-echo "\nResult: ";
-print_r($position); //print all array
-printWordBySillable($word, $position);// print words into syllables
-var_dump($inputWord);
-$ExecTime->getExecutionTime();
-
 ?>

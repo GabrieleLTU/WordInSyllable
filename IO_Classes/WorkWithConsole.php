@@ -19,6 +19,7 @@
 // read the input and save it in the array (as one element)
     public function inputContent ()
     {
+      echo "Input: ";
       $input = fopen ("php://stdin","r");
       $this->consoleContent[] = trim(fgets($input));
     }

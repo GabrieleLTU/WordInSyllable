@@ -32,7 +32,7 @@
           $fileContent[] = $this->file->current();
           $this->file->next();
       }
-      echo "fileContent: "; print_r($fileContent);
+      //echo "fileContent: "; print_r($fileContent);
       $this->fileContent = $fileContent;
     }
 

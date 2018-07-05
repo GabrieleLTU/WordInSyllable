@@ -4,6 +4,7 @@
   class WordInSyllable extends Word
   {
     private $possition;
+    private $syllableWord;
 
     function __construct($word)
     {
@@ -53,6 +54,7 @@
         }
 
       }
+      $this->saveWordSylables();
     }
 
    private function checkAnywereInWord ($syllable, $searchStart)
@@ -83,7 +85,7 @@
         if(is_numeric($syllable[$i]))
         {
           if ($position[$letterNumber]<$syllable[$i]) {
-            $position[$letterNumber]=$syllable[$i];
+            $position[$letterNumber] = $syllable[$i];
           }
         }
         else {
@@ -91,6 +93,29 @@
         }
       }
      $this->position = $position;
+    }
+
+    private function saveWordSylables ()
+    {
+      $syllableWord = "";
+      $this->possition[strlen($this->word)]=0;
+      $splitWord = str_split($this->word,1);
+      for ($i=0; $i < strlen($this->word); $i++)
+      {
+        $syllableWord=$syllableWord.$splitWord[$i];
+        //echo $word[$i];
+
+        if ($this->position[$i]%2>0)
+        {
+          $syllableWord=$syllableWord."-";
+        }
+      }
+      $this->syllableWord = $syllableWord;
+    }
+
+    public function getSyllableWord()
+    {
+      return $this->syllableWord;
     }
 }
 ?>
