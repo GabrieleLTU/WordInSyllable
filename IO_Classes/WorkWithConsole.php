@@ -20,8 +20,7 @@
     public function inputContent ()
     {
       $input = fopen ("php://stdin","r");
-      $word = trim(fgets($input));
-      $this->consoleContent[] = $word;
+      $this->consoleContent[] = trim(fgets($input));
     }
 
 //return array of the content
