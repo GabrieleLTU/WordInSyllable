@@ -45,7 +45,8 @@
 // writeFileContentInFile
     public function outputContent ()
     {
-      file_put_contents('Data\filename.txt', $this->fileContent);//print_r($this->fileContent));
+      file_put_contents($this->file, $this->fileContent);//print_r($this->fileContent));
+
     }
 
   }
