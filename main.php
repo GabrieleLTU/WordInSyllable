@@ -12,6 +12,7 @@ require 'IO_Classes\WorkWithFile.php';
 /*$pathFile = new WorkWithFile;
 $pathFile->setFile("https://gist.githubusercontent.com/cosmologicon/1e7291714094d71a0e25678316141586/raw/006f7e9093dc7ad72b12ff9f1da649822e56d39d/tex-hyphenation-patterns.txt");
 $pathFile->readContent();//Data\syllable_example.txt");//
+$pathFile->setFile('Data\filename.txt');
 $pathFile->outputContent();
 die();*/
  echo "Input: ";
