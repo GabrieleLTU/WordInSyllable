@@ -33,9 +33,8 @@
 // output all content in console
     public function outputContent ()
     {
-      for ($i=0; $i < sizeof($this->consoleContent); $i++)
-      {
-        echo $this->consoleContent[$i]."\n";
+      foreach ($this->consoleContent as $oneElement) {
+        echo $oneElement."\n";
       }
     }
 

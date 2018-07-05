@@ -7,21 +7,22 @@
       $wordsList = $this->getWords();
       $syllablesList = $this->getSyllables();
       $syllabledWordsList = $this->wordsInSyllableAlgorithm ($wordsList, $syllablesList);
-      $this->outputContent($syllabledWordsList);
+      //$this->outputContent($syllabledWordsList);
     }
 
     public function wordsInSyllableAlgorithm ($words, $syllables)
     {
+      //echo "input: ".$words[0]."\n";
+      //echo "words number: ".count($words)."\n";
+    //  echo "syllables number: ".count($syllables)."\n";
       $syllabledWordsList = [];
-      for ($i=0; $i < sizeof($words); $i++)
+      foreach ($words as $word)
       {
-        $oneWord = new WordInSyllable($words[$i]);
-        for ($j=0; $j < sizeof($syllables); $j++)
-        {
-          $oneWord->checkWord($syllables[$j]);
-          $syllabledWordsList[] = $oneWord->getSyllableWord();
-        }
+        $oneWord = new WordInSyllable($word);
+        $syllabledWordsList[] = $oneWord->checkWordWithAllSyllables($syllables);
       }
+      //echo "output: ".$syllabledWordsList[0]."\n";
+      //echo "output syllabledWordsList array size: ".count($syllabledWordsList)."\n";
       return $syllabledWordsList;
     }
 

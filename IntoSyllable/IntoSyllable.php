@@ -3,58 +3,74 @@
 
   class WordInSyllable extends Word
   {
-    private $possition;
+    private $position;
     private $syllableWord;
 
     function __construct($word)
     {
       $this->word = $word;
+      //parameter: int $start_index , int $num , mixed $value
+      $this->position = array_fill (0,strlen ($this->word), 0);
+      //echo"new";print_r($this->position);
+    }
+
+    public function checkWordWithAllSyllables ($syllables)
+    {
+      echo "1.Checking: ".$this->word.";\n pos: \n".print_r($this->position)."\nsw.:".$this->syllableWord."\n";
+      foreach ($syllables as $syllable)
+      {
+        $this->checkWord($syllable);
+      }
+
+      echo "2.Checking: ".$this->word.";\n pos: \n".print_r($this->position)."\nsw.:".$this->syllableWord."\n";
+      return $this->syllableWord;
     }
 
     public function checkWord ($syllable)
     {
-      //parameter: int $start_index , int $num , mixed $value
-      $this->position = array_fill (0,strlen ($this->word), 0);
-
+      //echo $syllable;
       $syllableNoNumber = preg_replace('/[0-9]+/', '', $syllable);
       $syllableNoNumber = str_replace('.','',$syllableNoNumber);
+      //echo $syllableNoNumber;
 
-      if ($syllable[0]==='.')//at the start of the word
+      if ($syllable[0]=='.')//at the start of the word
       {
         if (stripos ( $this->word, $syllableNoNumber, 0)===0)//$word[0]===$syllableNoNumber[0])
         //if(substr_compare($word, $syllableNoNumber, 0, strlen($syllableNoNumber)))
         {
+          echo "\n syl.: ".$syllable." -> ";
           //change $position array
           $this->changePosition($syllable, 0);
-          //echo "\n syl.: ".$syllable." -> "; print_r($position);
+
         }
       }
       else if ($syllable[strlen ($syllable)-1]==='.') //at the end of the word
       {
         $sylStart = strlen($this->word)-strlen($syllableNoNumber);
         $temp = stripos ($this->word, $syllableNoNumber, $sylStart);
-        if ($temp===$sylStart)// stripos ($word, $syllableNoNumber, $sylStart)!=false
+        if ($temp==$sylStart)// stripos ($word, $syllableNoNumber, $sylStart)!=false
         {
+          echo "\n syl.: ".$syllable." -> ";
           //change $position array
           $this->changePosition($syllable, $sylStart);
-          //echo "\n syl.: ".$syllable." -> ";// print_r($position);
+
         }
       }
       else //somewere in the word
       {
-        //checkAnywereInWord ($syllable, 0);
+        //$this->checkAnywereInWord ($syllable, 0);
 
         $sylStart = stripos ( $this->word, $syllableNoNumber, 0);
         while ($sylStart!==FALSE)
         {
           //change $position array
           $this->changePosition($syllable, $sylStart);
-          //echo "\n syl.: ".$syllable." -> "; //print_r($position);
+          echo "\n syl.: ".$syllable." -> "; //print_r($position);
           $sylStart = stripos ( $this->word, $syllableNoNumber, $sylStart+strlen($syllableNoNumber));
         }
 
       }
-      $this->saveWordSylables();
+
     }
 
    private function checkAnywereInWord ($syllable, $searchStart)
@@ -92,13 +108,14 @@
           $letterNumber++;
         }
       }
+      $this->saveWordSylables();
      $this->position = $position;
     }
 
     private function saveWordSylables ()
     {
       $syllableWord = "";
-      $this->possition[strlen($this->word)]=0;
+      $this->position[strlen($this->word)]=0;
       $splitWord = str_split($this->word,1);
       for ($i=0; $i < strlen($this->word); $i++)
       {
