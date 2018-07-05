@@ -11,21 +11,21 @@
       $this->file = new SplFileObject($fileName);
     }
 
-    public function setFileContent ($fileContent)
+    public function setContent ($content)
     {
-      if (is_array($fileContent))
+      if (is_array($content))
       {
-        $this->fileContent = $fileContent;
+        $this->fileContent = $content;
       }
       else
       {
-        $this->fileContent[] = $fileContent;
+        $this->fileContent[] = $content;
       }
 
     }
 
 // read the file and save its content in the array (one line - one element)
-    public function readContent ()
+    public function inputContent ()
     {
       $fileContent;
       while (!$this->file->eof()) {

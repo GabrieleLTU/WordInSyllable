@@ -8,6 +8,7 @@ require 'IntoSyllableFunctions.php';
 include 'ExecutionTimer\ExecutionTimer.php';
 require 'IO_Classes\IOinterface.php';
 require 'IO_Classes\WorkWithFile.php';
+require 'IO_Classes\WorkWithConsole.php';
 
 /*$pathFile = new WorkWithFile;
 $pathFile->setFile("https://gist.githubusercontent.com/cosmologicon/1e7291714094d71a0e25678316141586/raw/006f7e9093dc7ad72b12ff9f1da649822e56d39d/tex-hyphenation-patterns.txt");
@@ -16,8 +17,12 @@ $pathFile->setFile('Data\filename.txt');
 $pathFile->outputContent();
 die();*/
  echo "Input: ";
- $input = fopen ("php://stdin","r");
- $word = trim(fgets($input));
+ //$input = fopen ("php://stdin","r");
+ //$word = trim(fgets($input));
+ $fromConsole = new WorkWithConsole;
+ $fromConsole->inputContent();
+ $word = ($fromConsole->getContent())[0];
+ $fromConsole->outputContent();
 //new:
   $inputWord = new WordInSyllable ($word);
   //var_dump($inputWord);
