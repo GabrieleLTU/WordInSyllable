@@ -4,20 +4,17 @@
   {
     private $consoleContent;
 
-    public function setContent ($content)
+    public function setContent($content)
     {
-      if (is_array($content))
-      {
+      if (is_array($content)) {
         $this->consoleContent = $content;
-      }
-      else
-      {
+      } else {
         $this->consoleContent[] = $content;
       }
     }
 
 // read the input and save it in the array (as one element)
-    public function inputContent ()
+    public function inputContent()
     {
       echo "Input: ";
       $input = fopen ("php://stdin","r");
@@ -25,19 +22,18 @@
     }
 
 //return array of the content
-    public function getContent ()
+    public function getContent()
     {
       return $this->consoleContent;
     }
 
 // output all content in console
-    public function outputContent ()
+    public function outputContent()
     {
       foreach ($this->consoleContent as $oneElement) {
         echo $oneElement."\n";
       }
     }
-
   }
 
 ?>

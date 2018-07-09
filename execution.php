@@ -6,23 +6,20 @@
     {
       $wordsList = $this->getWords();
       $syllablesList = $this->getSyllables();
-      $syllabledWordsList = $this->wordsInSyllableAlgorithm ($wordsList, $syllablesList);
+      $syllabledWordsList = $this->wordsInSyllableAlgorithm(
+        $wordsList, $syllablesList);
       //$this->outputContent($syllabledWordsList);
     }
 
     public function wordsInSyllableAlgorithm ($words, $syllables)
     {
-      //echo "input: ".$words[0]."\n";
-      //echo "words number: ".count($words)."\n";
-    //  echo "syllables number: ".count($syllables)."\n";
       $syllabledWordsList = [];
-      foreach ($words as $word)
-      {
+
+      foreach ($words as $word) {
         $oneWord = new WordInSyllable($word);
         $syllabledWordsList[] = $oneWord->checkWordWithAllSyllables($syllables);
       }
-      //echo "output: ".$syllabledWordsList[0]."\n";
-      //echo "output syllabledWordsList array size: ".count($syllabledWordsList)."\n";
+
       return $syllabledWordsList;
     }
 
@@ -33,39 +30,37 @@
       $input = fopen ("php://stdin","r");
       $choice = trim(fgets($input));
 
-      switch ($choice)
-      		{
-      			case 'c':
-              $wordsList = $this->getDataFromConsole();
-      				break;
-            case 'f':
-              $wordsList = $this->getDataFromFile();
-        			break;
-      			default:
-      			   echo "Your choice is not correct. \n";
-      			   break;
+      switch ($choice) {
+          case 'c':
+                $wordsList = $this->getDataFromConsole();
+      			  	break;
+          case 'f':
+                $wordsList = $this->getDataFromFile();
+        		  	break;
+      		default:
+      			    echo "Your choice is not correct. \n";
+      			    break;
       		}
       return $wordsList;
     }
 
-    private function getSyllables ()
+    private function getSyllables()
     {
       $syllablesList = [];
       echo "c - input syllable(s) in console;\nf - input syllable(s) from file;\n";
       $input = fopen ("php://stdin","r");
       $choice = trim(fgets($input));
 
-      switch ($choice)
-      		{
-      			case 'c':
-              $syllablesList = $this->getDataFromConsole();
-      				break;
-            case 'f':
-              $syllablesList = $this->getDataFromFile();
-        			break;
-      			default:
-      			   echo "Your choice is not correct.\n";
-      			   break;
+      switch ($choice) {
+          case 'c':
+                $syllablesList = $this->getDataFromConsole();
+      			  	break;
+          case 'f':
+                $syllablesList = $this->getDataFromFile();
+        			  break;
+      		default:
+      			    echo "Your choice is not correct.\n";
+      			    break;
       		}
 
       return $syllablesList;
@@ -94,18 +89,17 @@
       $input = fopen ("php://stdin","r");
       $choice = trim(fgets($input));
 
-      switch ($choice)
-      		{
-      			case 'c':
-              $output = new WorkWithConsole();
-      				break;
-            case 'f':
-              $output = new WorkWithFile();
-              $output->setFile('Data\filename.txt');
-        			break;
-              case 'e':
-          			break;
-      			default:
+      switch ($choice) {
+          case 'c':
+                $output = new WorkWithConsole();
+      			  	break;
+          case 'f':
+               $output = new WorkWithFile();
+               $output->setFile('Data\filename.txt');
+         	 		 break;
+          case 'e':
+          		 break;
+      		default:
       			   echo "Your choice is not correct. Please choose again.";
       			   break;
       		}
@@ -114,7 +108,6 @@
         $output->setContent($outputData);
         $output->outputContent();
       }
-
     }
   }
 ?>

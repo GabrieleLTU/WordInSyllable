@@ -10,10 +10,10 @@
 
     function __construct()
     {
-      date_default_timezone_set(date_default_timezone_get());
+      //date_default_timezone_set(date_default_timezone_get());
     }
 
-    public function startTime ()
+    public function startTime()
     {
       $this->dtStart = microtime(true);
       $this->dtEnd = null;
@@ -21,21 +21,18 @@
       //$this->dtEnd2 = null;
     }
 
-    public function endTime ()
+    public function endTime()
     {
       $this->dtEnd = microtime(true);
       //$this->dtEnd2 = new DateTime();
     }
 
-    public function getExecutionTime ()
+    public function getExecutionTime()
     {
-      if (!is_null($this->dtStart) && !is_null($this->dtEnd))
-      {
+      if (!is_null($this->dtStart) && !is_null($this->dtEnd)) {
         $execTimeSec = $this->dtEnd - $this->dtStart;
         echo "\nExecute time (sec): ".$execTimeSec;
-      }
-      else
-      {
+      } else {
         echo "\n Not started or ended time of execution calculating.";
       }
 
@@ -45,7 +42,5 @@
                 ->format('Execute time2 (sec): %m:%i.%f');
       }*/
     }
-
   }
-
 ?>

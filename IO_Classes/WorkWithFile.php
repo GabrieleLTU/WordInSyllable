@@ -5,27 +5,23 @@
     private $fileContent;
     public $file;
 
-    public function setFile ($fileName)
+    public function setFile($fileName)
     {
-      //if file exist check
+      //need to add: if file exist check
       $this->file = new SplFileObject($fileName);
     }
 
-    public function setContent ($content)
+    public function setContent($content)
     {
-      if (is_array($content))
-      {
+      if (is_array($content)) {
         $this->fileContent = $content;
-      }
-      else
-      {
+      } else {
         $this->fileContent[] = $content;
       }
-
     }
 
 // read the file and save its content in the array (one line - one element)
-    public function inputContent ()
+    public function inputContent()
     {
       $fileContent;
       while (!$this->file->eof()) {
@@ -46,9 +42,6 @@
     public function outputContent ()
     {
       file_put_contents($this->file, $this->fileContent);//print_r($this->fileContent));
-
     }
-
   }
-
 ?>
