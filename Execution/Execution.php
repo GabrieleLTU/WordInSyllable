@@ -1,4 +1,5 @@
-<?php  namespace WordInSyllable;
+<?php
+namespace WordInSyllable\Execution;
 
 use WordInSyllable\IntoSyllable\WordInSyllable;
 use WordInSyllable\IO_Classes\IOinterface;

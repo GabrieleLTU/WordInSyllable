@@ -8,8 +8,10 @@ use SplFileObject;
 
     public function setFile($fileName)
     {
-      //need to add: if file exist check
       $this->file = new SplFileObject($fileName);
+      if (!file_exists($fileName)) {
+          echo "File does not exists.";
+      }
     }
 
     public function setContent($content)

@@ -1,34 +1,20 @@
 <?php
-use WordInSyllable\Execution;
+require_once 'Autoloader.php';
 
-spl_autoload_register(function ($class) {
+use WordInSyllable\Autoloader;
+use WordInSyllable\Execution\Execution;
 
-    // project-specific namespace prefix
-    $prefix = 'WordInSyllable\\';
 
-    // base directory for the namespace prefix
-    $base_dir = __DIR__.'\\';
+// instantiate the loader
+$loader = new Autoloader();
+// register the autoloader
+$loader->register();
 
-    // does the class use the namespace prefix?
-    $len = strlen($prefix);
-    if (strncmp($prefix, $class, $len) !== 0) {
-        // no, move to the next registered autoloader
-        return;
-    }
+$loader->addNamespace('WordInSyllable\Execution', __DIR__ . '/Execution');
+$loader->addNamespace('WordInSyllable\ExecutionTimer', __DIR__ . '/ExecutionTimer');
+$loader->addNamespace('WordInSyllable\IntoSyllable', __DIR__ . '/IntoSyllable');
+$loader->addNamespace('WordInSyllable\IO_Classes', __DIR__ . '/IO_Classes');
 
-    // get the relative class name
-    $relative_class = substr($class, $len);
 
-    // replace the namespace prefix with the base directory, replace namespace
-    // separators with directory separators in the relative class name, append
-    // with .php
-    $file = $base_dir . str_replace('\\', '/', $relative_class).".php";
-
-    // if the file exists, use it
-    if (file_exists($file)) {
-        require $file;
-    }
-});
-$execute = new Execution;
+$execute = new Execution();
 $execute->execute();
-?>

@@ -1,4 +1,5 @@
-<?php namespace WordInSyllable\IO_Classes;
+<?php
+namespace WordInSyllable\IO_Classes;
 
   class WorkWithConsole implements IOinterface
   {
@@ -33,6 +34,19 @@
       foreach ($this->consoleContent as $oneElement) {
         echo $oneElement."\n";
       }
+    }
+
+    // output all content in console
+    public static function outputParameterToConsole($content)
+    {
+      if (is_array($content)) {
+        echo $content;
+      } else {
+        foreach ($content as $oneElement) {
+          echo $oneElement."\n";
+        }
+      }
+
     }
   }
 

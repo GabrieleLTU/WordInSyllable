@@ -1,4 +1,5 @@
-<?php namespace WordInSyllable\IntoSyllable;
+<?php
+namespace WordInSyllable\IntoSyllable;
 
   use WordInSyllable\IntoSyllable\Word;
   use WordInSyllable\IO_Classes\IOinterface;
@@ -38,7 +39,7 @@
         }
       } else if ($syllable[strlen($syllable)-1] === '.') { //at the end of the word
         $sylStart = strlen($this->word) - strlen($syllableNoNumber);
-        $temp = stripos($this->word, $syllableNoNumber, $sylStart);
+        $temp = stripos($this->word, $syllableNoNumber, $sylStart); // strrpos - Find the position of the last occurrence of a substring in a string
         if ($temp == $sylStart) {// stripos ($word, $syllableNoNumber, $sylStart)!=false
           echo "\n syl.: ".$syllable." -> ";
           //change $position array
