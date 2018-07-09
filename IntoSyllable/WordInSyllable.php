@@ -4,7 +4,7 @@ namespace WordInSyllable\IntoSyllable;
   use WordInSyllable\IntoSyllable\Word;
   use WordInSyllable\IO_Classes\IOinterface;
 
-  class WordInSyllable extends Word
+  final class WordInSyllable extends Word
   {
     private $position;
     private $syllableWord;
@@ -18,7 +18,7 @@ namespace WordInSyllable\IntoSyllable;
     {
       //parameter: int $start_index , int $num , mixed $value
       $this->position = array_fill (0, strlen($this->word), 0);
-
+      //var_dump($syllables);
       foreach ($syllables as $syllable) {
         $this->checkWord($syllable);
       }

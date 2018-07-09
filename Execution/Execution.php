@@ -10,11 +10,20 @@ use WordInSyllable\IO_Classes\WorkWithConsole;
   {
     public function execute ()
     {
+    //  $loggerObject = new FileLogger("Data\logger_execute.txt");
+      try {
+      $wordsList = $this->getWords();
       $wordsList = $this->getWords();
       $syllablesList = $this->getSyllables();
       $syllabledWordsList = $this->wordsInSyllableAlgorithm(
         $wordsList, $syllablesList);
       $this->outputContent($syllabledWordsList);
+
+    } catch (\Exception $e) {
+      //sent $e to logger;
+      echo "\nMessage:  ". $e->getMessage()."\n";
+    }
+
     }
 
     public function wordsInSyllableAlgorithm ($words, $syllables)
@@ -44,9 +53,14 @@ use WordInSyllable\IO_Classes\WorkWithConsole;
                 $wordsList = $this->getDataFromFile();
         		  	break;
       		default:
-      			    echo "Your choice is not correct. \n";
+                $error = "Your choice is not correct. \n";
+                throw new \Exception($error);
       			    break;
       		}
+      if (is_null($wordsList)) {
+        $error = 'There is no words.';
+          throw new \Exception($error);
+      }
       return $wordsList;
     }
 
@@ -65,10 +79,10 @@ use WordInSyllable\IO_Classes\WorkWithConsole;
                 $syllablesList = $this->getDataFromFile();
         			  break;
       		default:
-      			    echo "Your choice is not correct.\n";
+                $error = "Your choice is not correct. \n";
+                throw new \Exception($error);
       			    break;
       		}
-
       return $syllablesList;
     }
 
@@ -77,7 +91,7 @@ use WordInSyllable\IO_Classes\WorkWithConsole;
       $file = new WorkWithFile;
       $file->setFile("https://gist.githubusercontent.com/cosmologicon/1e7291714094d71a0e25678316141586/raw/006f7e9093dc7ad72b12ff9f1da649822e56d39d/tex-hyphenation-patterns.txt");
       $file->inputContent();//Data\syllable_example.txt");//
-      $file->setFile('Data\filename.txt');
+      //$file->setFile('Data\filename.txt');
       return $file->getContent();
     }
 
@@ -106,8 +120,9 @@ use WordInSyllable\IO_Classes\WorkWithConsole;
           case 'e':
           		 break;
       		default:
-      			   echo "Your choice is not correct. Please choose again.";
-      			   break;
+               $error = "Your choice is not correct. \n";
+               throw new \Exception($error);
+               break;
       		}
 
       if (isset($output)) {

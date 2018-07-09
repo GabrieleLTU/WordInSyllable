@@ -1,6 +1,6 @@
 <?php namespace WordInSyllable\IntoSyllable;
 
-  class Word
+  abstract class Word
   {
     protected $word;
   //  protected $syllableWord;

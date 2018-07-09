@@ -4,14 +4,12 @@ use SplFileObject;
   class WorkWithFile implements IOinterface
   {
     private $fileContent;
-    public $file;
+    private $file;
 
     public function setFile($fileName)
     {
       $this->file = new SplFileObject($fileName);
-      if (!file_exists($fileName)) {
-          echo "File does not exists.";
-      }
+      //$fileInfo->getRealPath();
     }
 
     public function setContent($content)
