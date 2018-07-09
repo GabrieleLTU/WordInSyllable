@@ -1,5 +1,7 @@
-<?php
-  require 'IntoSyllable\Word.php';
+<?php namespace WordInSyllable\IntoSyllable;
+
+  use WordInSyllable\IntoSyllable\Word;
+  use WordInSyllable\IO_Classes\IOinterface;
 
   class WordInSyllable extends Word
   {

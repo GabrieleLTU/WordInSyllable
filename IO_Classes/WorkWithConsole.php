@@ -1,4 +1,4 @@
-<?php
+<?php namespace WordInSyllable\IO_Classes;
 
   class WorkWithConsole implements IOinterface
   {

@@ -1,4 +1,5 @@
-<?php
+<?php namespace WordInSyllable\IO_Classes;
+use SplFileObject;
 
   class WorkWithFile implements IOinterface
   {

@@ -1,4 +1,9 @@
-<?php //namespace execution;
+<?php  namespace WordInSyllable;
+
+use WordInSyllable\IntoSyllable\WordInSyllable;
+use WordInSyllable\IO_Classes\IOinterface;
+use WordInSyllable\IO_Classes\WorkWithFile;
+use WordInSyllable\IO_Classes\WorkWithConsole;
 
   class Execution
   {
@@ -8,7 +13,7 @@
       $syllablesList = $this->getSyllables();
       $syllabledWordsList = $this->wordsInSyllableAlgorithm(
         $wordsList, $syllablesList);
-      //$this->outputContent($syllabledWordsList);
+      $this->outputContent($syllabledWordsList);
     }
 
     public function wordsInSyllableAlgorithm ($words, $syllables)

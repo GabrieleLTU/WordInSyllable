@@ -1,4 +1,5 @@
-<?php
+<?php namespace WordInSyllable\IO_Classes;
+
   interface IOinterface
   {
     public function setContent($content);

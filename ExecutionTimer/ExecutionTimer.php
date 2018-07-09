@@ -1,4 +1,4 @@
-<?php //namespace ExecutionTimer;
+<?php namespace WordInSyllable\ExecutionTimer;
 
   class ExecutionTimer
   {

@@ -1,4 +1,4 @@
-<?php
+<?php namespace WordInSyllable\IntoSyllable;
 
   class Word
   {

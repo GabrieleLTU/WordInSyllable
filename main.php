@@ -1,14 +1,34 @@
-<?php //namespace main;
+<?php
+use WordInSyllable\Execution;
 
-//use ExecutionTimer as ;
+spl_autoload_register(function ($class) {
 
-require 'IntoSyllable\IntoSyllable.php';
-include 'ExecutionTimer\ExecutionTimer.php';
-require 'IO_Classes\IOinterface.php';
-require 'IO_Classes\WorkWithFile.php';
-require 'IO_Classes\WorkWithConsole.php';
-require 'Execution.php';
+    // project-specific namespace prefix
+    $prefix = 'WordInSyllable\\';
 
+    // base directory for the namespace prefix
+    $base_dir = __DIR__.'\\';
+
+    // does the class use the namespace prefix?
+    $len = strlen($prefix);
+    if (strncmp($prefix, $class, $len) !== 0) {
+        // no, move to the next registered autoloader
+        return;
+    }
+
+    // get the relative class name
+    $relative_class = substr($class, $len);
+
+    // replace the namespace prefix with the base directory, replace namespace
+    // separators with directory separators in the relative class name, append
+    // with .php
+    $file = $base_dir . str_replace('\\', '/', $relative_class).".php";
+
+    // if the file exists, use it
+    if (file_exists($file)) {
+        require $file;
+    }
+});
 $execute = new Execution;
 $execute->execute();
 ?>
