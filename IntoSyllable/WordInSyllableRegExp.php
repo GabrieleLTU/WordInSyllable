@@ -62,6 +62,7 @@ namespace WordInSyllable\IntoSyllable;
         for ($i=0; $i < count($matches[0]); $i++) {
           $this->changePosition($syllable, $matches[0][$i][1]);
         }
+      }
     }
 
     private function changePosition($syllable, $sylStart)
