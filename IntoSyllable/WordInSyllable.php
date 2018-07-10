@@ -99,10 +99,10 @@ namespace WordInSyllable\IntoSyllable;
      $this->position = $position;
     }
 
-    private function saveWordSylables ()
+    private function saveWordSylables()
     {
       $syllableWord = "";
-      //$this->position[strlen($this->word)] = 0;
+      $this->position[strlen($this->word)-1] = 0;
       $splitWord = str_split($this->word, 1);
 
       for ($i=0; $i < strlen($this->word); $i++) {

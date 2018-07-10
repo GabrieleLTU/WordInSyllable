@@ -21,8 +21,10 @@ namespace WordInSyllable\IntoSyllable;
 
     public function checkWordWithAllSyllables($syllables)
     {
+      //echo ""
       //parameter: int $start_index , int $num , mixed $value
       $this->position = array_fill (0, strlen($this->word), 0);
+
       foreach ($syllables as $syllable) {
         $this->checkWord($syllable);
       }
@@ -32,16 +34,17 @@ namespace WordInSyllable\IntoSyllable;
     public function checkWord($syllable)
     {
       $syllableNoNumber = preg_replace('/[\.\d\n\r]+/', '', $syllable);
-      preg_match_all('/('.$syllableNoNumber.')/', $this->word, $matches, PREG_OFFSET_CAPTURE);
+      preg_match_all('/('.$syllableNoNumber.')/i', $this->word, $matches, PREG_OFFSET_CAPTURE);
 
       if ($syllable[0] === '.') {//at the start of the word
-        preg_match('/^('.$syllableNoNumber.')/', $this->word, $matches, PREG_OFFSET_CAPTURE);
+        preg_match('/^('.$syllableNoNumber.')/i', $this->word, $matches, PREG_OFFSET_CAPTURE);
 
         if (!empty($matches[0])) {
           $this->changePosition($syllable, 0);
         }
       } else if ($syllable[strlen($syllable)-1] === '.') { //at the end of the word
-          preg_match('/('.$syllableNoNumber.')$/', $this->word, $matches, PREG_OFFSET_CAPTURE);
+
+          preg_match('/('.$syllableNoNumber.')$/i', $this->word, $matches, PREG_OFFSET_CAPTURE);
           if (!empty($matches[0])) {
             $this->changePosition($syllable, $matches[0][1]);
           }
@@ -51,13 +54,12 @@ namespace WordInSyllable\IntoSyllable;
           $this->changePosition($syllable, $matches[0][$i][1]);
         }
       }
-      $this->saveWordSylables();
     }
 
    private function checkAnywereInWord ($syllable, $searchStart)
     {
-      $syllableNoNumber = preg_replace('/[\.\d\n\r]+/', '', $syllable);
-      preg_match_all('/('.$syllableNoNumber.')/', $this->word, $matches, PREG_OFFSET_CAPTURE);
+      $syllableNoNumber = preg_replace('/[\.[:space:]]+/i', '', $syllable);
+      preg_match_all('/('.$syllableNoNumber.')/i', $this->word, $matches, PREG_OFFSET_CAPTURE);
       if (!empty($matches[0])) {
         for ($i=0; $i < count($matches[0]); $i++) {
           $this->changePosition($syllable, $matches[0][$i][1]);
@@ -68,7 +70,7 @@ namespace WordInSyllable\IntoSyllable;
     private function changePosition($syllable, $sylStart)
     {
       $position = $this->position;
-      $syllable = str_replace('.', '', $syllable);
+      $syllable = preg_replace('/\./', '', $syllable);
       if (($sylStart-1)<0) {
         $letterNumber=0;
       }
@@ -85,16 +87,16 @@ namespace WordInSyllable\IntoSyllable;
         }
       }
      $this->position = $position;
+     $this->saveWordSylables();
     }
 
-    private function saveWordSylables ()
+    private function saveWordSylables()
     {
       $syllableWord = "";
-      //$this->position[strlen($this->word)] = 0;
-      $splitWord = str_split($this->word, 1);
-
+      $this->position[strlen($this->word)-1] = 0;
+      //var_dump($this->position);
       for ($i=0; $i < strlen($this->word); $i++) {
-        $syllableWord = $syllableWord.$splitWord[$i];
+        $syllableWord = $syllableWord.$this->word[$i];
         if ($this->position[$i]%2 > 0) {
           $syllableWord = $syllableWord."-";
         }

@@ -17,7 +17,7 @@ use SplFileObject;
       if (is_array($content)) {
         $this->fileContent = $content;
       } else {
-        $this->fileContent[] = $content;
+        $this->fileContent = $content;
       }
     }
 
@@ -42,7 +42,8 @@ use SplFileObject;
 // writeFileContentInFile
     public function outputContent ()
     {
-      file_put_contents($this->file, $this->fileContent);//print_r($this->fileContent));
+      file_put_contents($this->file, $this->fileContent, FILE_APPEND);//print_r($this->fileContent));
+  //file_put_contents($this->file, $content, FILE_APPEND);
     }
   }
 ?>

@@ -10,7 +10,7 @@ namespace WordInSyllable\IO_Classes;
       if (is_array($content)) {
         $this->consoleContent = $content;
       } else {
-        $this->consoleContent[] = $content;
+        $this->consoleContent = $content;
       }
     }
 
