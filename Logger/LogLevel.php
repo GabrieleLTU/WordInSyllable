@@ -1,10 +1,6 @@
 <?php
+namespace  WordInSyllable\Logger;
 
-namespace Psr\Log;
-
-/**
- * Describes log levels
- */
 class LogLevel
 {
     const EMERGENCY = 'emergency';

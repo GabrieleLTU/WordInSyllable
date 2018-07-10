@@ -3,7 +3,6 @@ namespace WordInSyllable\IntoSyllable;
 
   use WordInSyllable\IntoSyllable\Word;
   use WordInSyllable\IO_Classes\IOinterface;
-  use SplFileObject;
 
   final class WordInSyllable extends Word
   {
@@ -14,7 +13,6 @@ namespace WordInSyllable\IntoSyllable;
     function __construct($word, $loggerFile)
     {
       $this->word = $word;
-      $this->loggerFile = new SplFileObject($loggerFile);
     }
 
     public function checkWordWithAllSyllables($syllables)

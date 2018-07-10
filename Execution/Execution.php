@@ -5,18 +5,18 @@ use WordInSyllable\IntoSyllable\WordInSyllable;
 use WordInSyllable\IO_Classes\IOinterface;
 use WordInSyllable\IO_Classes\WorkWithFile;
 use WordInSyllable\IO_Classes\WorkWithConsole;
+use WordInSyllable\Logger\FileLogger;
 
   class Execution
   {
-    public function execute ()
+    public function execute()
     {
-    //  $loggerObject = new FileLogger("Data\logger_execute.txt");
+      $loggerObject = new FileLogger('Data\logger_execute.txt');
       try {
-      $wordsList = $this->getWords();
       $wordsList = $this->getWords();
       $syllablesList = $this->getSyllables();
       $syllabledWordsList = $this->wordsInSyllableAlgorithm(
-        $wordsList, $syllablesList);
+        $wordsList, $syllablesList, "Data\logger_execute.txt");
       $this->outputContent($syllabledWordsList);
 
     } catch (\Exception $e) {
@@ -26,12 +26,12 @@ use WordInSyllable\IO_Classes\WorkWithConsole;
 
     }
 
-    public function wordsInSyllableAlgorithm ($words, $syllables)
+    public function wordsInSyllableAlgorithm($words, $syllables, $loggerFile = NULL)
     {
       $syllabledWordsList = [];
 
       foreach ($words as $word) {
-        $oneWord = new WordInSyllable($word);
+        $oneWord = new WordInSyllable($word, $loggerFile);
         $syllabledWordsList[] = $oneWord->checkWordWithAllSyllables($syllables);
       }
 
@@ -58,7 +58,7 @@ use WordInSyllable\IO_Classes\WorkWithConsole;
       			    break;
       		}
       if (is_null($wordsList)) {
-        $error = 'There is no words.';
+        $error = 'There is no words...';
           throw new \Exception($error);
       }
       return $wordsList;

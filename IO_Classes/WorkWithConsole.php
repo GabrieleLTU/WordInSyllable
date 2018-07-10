@@ -19,12 +19,13 @@ namespace WordInSyllable\IO_Classes;
     {
       echo "Input: ";
       $input = fopen ("php://stdin","r");
-      if (strlen(trim(fgets($input)))) {
+      $line = trim(fgets($input));
+      //var_dump(strlen(trim(fgets($input))));
+      if (strlen($line) === 0) {
         return null;
       } else {
-        $this->consoleContent[] = trim(fgets($input));
+        $this->consoleContent[] = $line;
       }
-
     }
 
 //return array of the content
