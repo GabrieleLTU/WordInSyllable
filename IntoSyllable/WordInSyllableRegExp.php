@@ -5,7 +5,7 @@ namespace WordInSyllable\IntoSyllable;
   use WordInSyllable\IO_Classes\IOinterface;
   use SplFileObject;
 
-  final class WordInSyllable extends Word
+  final class WordInSyllableRegExp extends Word
   {
     private $position;
     private $syllableWord;
@@ -32,35 +32,23 @@ namespace WordInSyllable\IntoSyllable;
     public function checkWord($syllable)
     {
       $syllableNoNumber = preg_replace('/[\.\d\n\r]+/', '', $syllable);
+      preg_match_all('/('.$syllableNoNumber.')/', $this->word, $matches, PREG_OFFSET_CAPTURE);
 
       if ($syllable[0] === '.') {//at the start of the word
         preg_match('/^('.$syllableNoNumber.')/', $this->word, $matches, PREG_OFFSET_CAPTURE);
-        if (count($matches[0]) === 1) {
+
+        if (!empty($matches[0])) {
           $this->changePosition($syllable, 0);
         }
-      } else if $syllable[strlen($syllable)-1] === '.') { //at the end of the word
+      } else if ($syllable[strlen($syllable)-1] === '.') { //at the end of the word
           preg_match('/('.$syllableNoNumber.')$/', $this->word, $matches, PREG_OFFSET_CAPTURE);
-          if (count($matches[0]) === 1) {
+          if (!empty($matches[0])) {
             $this->changePosition($syllable, $matches[0][1]);
           }
-        }
       } else {//somewere in the word
-        preg_match('/('.$syllableNoNumber.')/', $this->word, $matches, PREG_OFFSET_CAPTURE);
-        foreach ($matches[0] as $key => $value) {
-          // code...
-        }
-
-
-        //$this->checkAnywereInWord ($syllable, 0);
-        $sylStart = strpos($this->word, $syllableNoNumber, 0);
-        while ($sylStart !== FALSE) {
-          //change $position array
-          $this->changePosition($syllable, $sylStart);
-          //echo "\n else syl.: ".$syllable." -> "; //print_r($position);
-        //  var_dump($sylStart);
-          $sylStart = stripos(
-            $this->word, $syllableNoNumber,
-            $sylStart + strlen($syllableNoNumber));
+      //  preg_match_all('/('.$syllableNoNumber.')/', $this->word, $matches, PREG_OFFSET_CAPTURE);
+        for ($i=0; $i < count($matches[0]); $i++) {
+          $this->changePosition($syllable, $matches[0][$i][1]);
         }
       }
       $this->saveWordSylables();
@@ -69,13 +57,11 @@ namespace WordInSyllable\IntoSyllable;
    private function checkAnywereInWord ($syllable, $searchStart)
     {
       $syllableNoNumber = preg_replace('/[\.\d\n\r]+/', '', $syllable);
-      $sylStart = stripos ($this->word, $syllableNoNumber, $searchStart);
-      while ($sylStart !== FALSE) {
-        //change $position array
-        $this->changePosition($syllable, $sylStart);
-        $sylStart = stripos(
-          $this->word, $syllableNoNumber, $sylStart + strlen($syllableNoNumber));
-      }
+      preg_match_all('/('.$syllableNoNumber.')/', $this->word, $matches, PREG_OFFSET_CAPTURE);
+      if (!empty($matches[0])) {
+        for ($i=0; $i < count($matches[0]); $i++) {
+          $this->changePosition($syllable, $matches[0][$i][1]);
+        }
     }
 
     private function changePosition($syllable, $sylStart)
