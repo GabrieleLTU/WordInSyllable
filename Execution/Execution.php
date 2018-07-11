@@ -13,12 +13,32 @@
     {
         public function execute()
         {
+            echo "
+            w - word(s) into syllbles;
+            s - added syllables to database;
+            Your choice: ";
+            $input = fopen ("php://stdin","r");
+            $choice = trim(fgets($input));
+
+            switch ($choice) {
+                case 'w':
+                    $this->executeWordInSyllable();
+          	        break;
+                case 's':
+                    $this->writeNewSyllablesToDB();
+            		break;
+          		default:
+                    $error = "Your choice is not correct. \n";
+                    throw new \Exception($error);
+          			break;
+          		}
+        }
+
+        private function executeWordInSyllable()
+        {
             try {
-                //$db = new WorkWithDB;
-                //die();
-                $loggerObject = new FileLogger('Data\logger_execute.txt');
+                //$loggerObject = new FileLogger('Data\logger_execute.txt');
                 $wordsList = $this->getWords();
-                //var_dump($wordsList);
                 $syllablesList = $this->getSyllables();
                 $syllabledWordsList = $this->wordsInSyllableAlgorithm2(
                     $wordsList,
@@ -27,9 +47,23 @@
                 );
                 $this->outputContent($syllabledWordsList);
             } catch (\Exception $e) {
-                //sent $e to logger;
-                echo "\nMessage:  " . $e->getMessage() . "\n";
+                $error = "Execute WordInSyl fail: " . $e->getMessage() . "\n";
+                throw new \Exception($error);
             }
+        }
+
+        private function writeNewSyllablesToDB()
+        {
+            $syllablesArray = $this->getSyllables();
+            $db = new WorkWithDB;
+            foreach ($syllablesArray as $syllable) {
+                try {
+                    $db->insertSyllable($syllable);
+                } catch (\Exception $e) {
+                    echo $e->getMessage();
+                }
+            }
+            echo "Syllables insertion end."
         }
 
         private function wordsInSyllableAlgorithm2(
@@ -127,7 +161,7 @@
                     $syllablesList = $this->getDataFromFile();
             		break;
               case 'd':
-                    $syllablesList = $this->getDataFromDatabase();
+                    $syllablesList = $this->getSyllablesFromDatabase();
             		break;
           		default:
                     $error = "Your choice is not correct. \n";
@@ -158,7 +192,7 @@
             return $fromConsole->getContent();
         }
 
-        private function getDataFromDatabase(): array
+        private function getSyllablesFromDatabase(): array
         {
             try {
                 $fromDB = new WorkWithDB;
