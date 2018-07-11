@@ -12,7 +12,9 @@
         function __construct()
         {
             $this->connect();
-            //$this->inserctWord("labas", null);
+            //$this->insertSyllable("as");
+            //$this->insertSyllable("as");
+            //$this->selectSyllables();
         }
 
         public function connect()
@@ -35,12 +37,60 @@
             }
         }
 
-        public function inserctWord(string $word, string $syllableWord = NULL)
+        //---WORD TABLE---//
+        public function insertWord(string $word, string $syllableWord = NULL)
         {
-            $sql = "INSERT INTO word (word, syllableWord) VALUES (?, ?)";
-            $sql->execute([$word, $syllableWord]);
-            // use exec() because no results are returned
-            $this->connection->exec($sql);
-            echo "New record created successfully";
+            try {
+                $sql = $this->connection->prepare('INSERT INTO word (word, syllableWord) VALUES (?, ?)');
+                $sql->bindParam(1, $word, PDO::PARAM_STR, 255);
+                $sql->bindParam(2, $syllableWord, PDO::PARAM_STR, 255);
+                $sql->execute();
+                //echo "New record created successfully";
+            } catch (\Exception $e) {
+                $error = "Insert word in database fail: " . $e->getMessage() . "\n";
+                throw new \Exception($error);
+            }
+        }
+
+        public function updateWordByWord(string $byWord, string $syllableWord = NULL)
+        {
+            try {
+                $sql = $this->connection->prepare('UPDATE word SET syllableword = ? WHERE word = ?');
+                $sql->bindParam(2, $word, PDO::PARAM_STR, 255);
+                $sql->bindParam(1, $syllableWord, PDO::PARAM_STR, 255);
+                $sql->execute();
+                //echo "New record updated successfully";
+            } catch (\Exception $e) {
+                $error = "Update word in database fail: " . $e->getMessage() . "\n";
+                throw new \Exception($error);
+            }
+        }
+
+        //---SYLLABLE TABLE---//
+        public function insertSyllable(string $syllable)
+        {
+            try {
+                $sql = $this->connection->prepare('INSERT INTO syllable (syllable) VALUES (?)');
+                $sql->bindParam(1, $syllable, PDO::PARAM_STR, 255);
+                $sql->execute();
+                //echo "New record created successfully";
+            } catch (\Exception $e) {
+                $error = "Insert syllable in database fail: " . $e->getMessage() . "\n";
+                throw new \Exception($error);
+            }
+        }
+
+        public function selectSyllables(): array
+        {
+            try {
+                $sth = $this->connection->prepare("SELECT syllable FROM syllable");
+                $sth->execute();
+                $result = $sth->fetchAll(PDO::FETCH_COLUMN, 0);
+                return $result;
+
+            } catch (\Exception $e) {
+                $error = "Insert syllable in database fail: " . $e->getMessage() . "\n";
+                throw new \Exception($error);
+            }
         }
     }

@@ -14,7 +14,8 @@
         public function execute()
         {
             try {
-                $db = new WorkWithDB; die();
+                //$db = new WorkWithDB;
+                //die();
                 $loggerObject = new FileLogger('Data\logger_execute.txt');
                 $wordsList = $this->getWords();
                 //var_dump($wordsList);
@@ -81,7 +82,10 @@
         private function getWords(): array
         {
             $wordsList = [];
-            echo "c - input word(s) in console;\nf - input word(s) from file;\n";
+            echo "
+            c - input word(s) in console;
+            f - input word(s) from file;
+            Your choice: ";
             $input = fopen ("php://stdin","r");
             $choice = trim(fgets($input));
 
@@ -107,17 +111,24 @@
         private function getSyllables(): array
         {
           $syllablesList = [];
-          echo "c - input syllable(s) in console;\nf - input syllable(s) from file;\n";
+          echo "
+          c - input syllable(s) in console;
+          f - input syllable(s) from file;
+          d - database;
+          Your choice: ";
           $input = fopen ("php://stdin","r");
           $choice = trim(fgets($input));
 
           switch ($choice) {
               case 'c':
                     $syllablesList = $this->getDataFromConsole();
-          			  	break;
+          			break;
               case 'f':
                     $syllablesList = $this->getDataFromFile();
-            			  break;
+            		break;
+              case 'd':
+                    $syllablesList = $this->getDataFromDatabase();
+            		break;
           		default:
                     $error = "Your choice is not correct. \n";
                     throw new \Exception($error);
@@ -129,7 +140,7 @@
         private function getDataFromFile(): array
         {
             $file = new WorkWithFile;
-            echo "Write file destination:\n";
+            echo "File destination:\n";
             $input = fopen ("php://stdin","r");
             $choice = trim(fgets($input));
             $file->setInputFile($choice);
@@ -145,6 +156,19 @@
             $fromConsole->inputContent();
             $word = ($fromConsole->getContent())[0];
             return $fromConsole->getContent();
+        }
+
+        private function getDataFromDatabase(): array
+        {
+            try {
+                $fromDB = new WorkWithDB;
+                //var_dump($fromDB->selectSyllables());
+                return $fromDB->selectSyllables();
+            } catch (\Exception $e) {
+                $error = "Database fail: " . $e->getMessage() . "\n";
+                throw new \Exception($error);
+            }
+
         }
 
         /**
