@@ -12,9 +12,7 @@
         function __construct()
         {
             $this->connect();
-            //$this->insertSyllable("as");
-            //$this->insertSyllable("as");
-            //$this->selectSyllables();
+            $this->insert("word", ['word'], ["words"]);
         }
 
         public function connect()
@@ -33,6 +31,72 @@
             catch(PDOException $e)
             {
                 $error = "Connection failed: " . $e->getMessage() . "\n";
+                throw new \Exception($error);
+            }
+        }
+
+        public function deleteTableData(string $tableName)
+        {
+            try {
+                $sql = $this->connection->prepare('DELETE * FROM ?');
+                $sql->bindParam(1, $tableName, PDO::PARAM_STR, 255);
+                $sql->execute();
+            } catch (\Exception $e) {
+                $error = "Delete table '" . $tableName . "' data from database fail: " . $e->getMessage() . "\n";
+                throw new \Exception($error);
+            }
+        }
+
+        public function insert(string $tableName,
+            array $atributeName,
+            array $values)
+        {
+            try {
+                $query = "INSERT INTO " . $tableName . " (";
+                $query = $query . implode(", ", $atributeName);
+                $query = $query . ") VALUES (";
+                $query = $query . ":" .  implode(", :", $atributeName) . ") ";
+
+                $sql = $this->connection->prepare($query);
+                for ($i=0; $i < count($atributeName); $i++) {
+                    $sql->bindParam(
+                        ":" . $atributeName[$i] . "",
+                        $values[$i]);
+                }
+                $sql->execute();
+
+            } catch (\Exception $e) {
+                echo $e->getMessage();
+            }
+
+        }
+
+        public function update(string $tableName,
+            array $atributeName,
+            array $values,
+            array $where
+            )
+        {
+            try {
+                $query = "UPDATE " . $tableName . " SET ";
+                for ($i=0; $i < count($atributeName); $i++) {
+                    $query = $query . $atributeName[$i] . "= :" . $atributeName[$i] . ", ";
+                }
+                $query = substr($query, 0, -2);
+
+                if (!empty($where) || !is_null($where)) {
+                    $query = $query . " WHERE " . implode(", ", $where);
+                }
+
+                $sql = $this->connection->prepare($query);
+                for ($i=0; $i < count($atributeName); $i++) {
+                    $sql->bindParam(
+                        ":" . $atributeName[$i] . "",
+                        $values[$i]);
+                }
+                $sql->execute();
+            } catch (\Exception $e) {
+                $error = "Update word in database fail: " . $e->getMessage() . "\n";
                 throw new \Exception($error);
             }
         }
@@ -65,6 +129,13 @@
                 throw new \Exception($error);
             }
         }
+        /**
+        *@return string/null
+        */
+        public function findWordWithSyllable()
+        {
+
+        }
 
         //---SYLLABLE TABLE---//
         public function insertSyllable(string $syllable)
@@ -93,4 +164,20 @@
                 throw new \Exception($error);
             }
         }
+
+        //---WORD, SYLLABLE, SYLLABLEBYWORD TABLES---//
+        public function insertSyllableByWord(string $word, string $syllable)
+        {
+            try {
+                $sql = $this->connection->prepare('INSERT INTO syllable (syllable) VALUES (?)');
+                $sql->bindParam(1, $syllable, PDO::PARAM_STR, 255);
+                $sql->execute();
+                //echo "New record created successfully";
+            } catch (\Exception $e) {
+                $error = "Insert syllable in database fail: " . $e->getMessage() . "\n";
+                throw new \Exception($error);
+            }
+        }
+
+
     }

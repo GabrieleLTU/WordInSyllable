@@ -13,6 +13,7 @@
     {
         public function execute()
         {
+            //$h = new WorkWithDB(); die();
             echo "
             w - word(s) into syllbles;
             s - added syllables to database;
@@ -43,7 +44,8 @@
                 $syllabledWordsList = $this->wordsInSyllableAlgorithm2(
                     $wordsList,
                     $syllablesList,
-                    "Data\logger_execute.txt"
+                    "Data\logger_execute.txt",
+                    true
                 );
                 $this->outputContent($syllabledWordsList);
             } catch (\Exception $e) {
@@ -63,13 +65,14 @@
                     echo $e->getMessage();
                 }
             }
-            echo "Syllables insertion end."
+            echo "Syllables insert end.";
         }
 
         private function wordsInSyllableAlgorithm2(
             array $wordsList,
             array $syllables,
-            $loggerFile = NULL
+            $loggerFile = NULL,
+            boolean $saveInDatabase
             ): array
         {
             $syllabledWordsList = [];
