@@ -10,6 +10,7 @@
     // register the autoloader
     $loader->register();
 
+    $loader->addNamespace('WordInSyllable\Database', __DIR__ . '/Database');
     $loader->addNamespace('WordInSyllable\Execution', __DIR__ . '/Execution');
     $loader->addNamespace('WordInSyllable\ExecutionTimer', __DIR__ . '/ExecutionTimer');
     $loader->addNamespace('WordInSyllable\IntoSyllable', __DIR__ . '/IntoSyllable');

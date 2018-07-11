@@ -1,6 +1,7 @@
 <?php
     namespace WordInSyllable\Execution;
 
+    use WordInSyllable\Database\WorkWithDB;
     use WordInSyllable\IntoSyllable\WordInSyllable;
     use WordInSyllable\IntoSyllable\WordInSyllableRegExp;
     use WordInSyllable\IO_Classes\IOinterface;
@@ -12,8 +13,9 @@
     {
         public function execute()
         {
-            $loggerObject = new FileLogger('Data\logger_execute.txt');
             try {
+                $db = new WorkWithDB; die();
+                $loggerObject = new FileLogger('Data\logger_execute.txt');
                 $wordsList = $this->getWords();
                 //var_dump($wordsList);
                 $syllablesList = $this->getSyllables();
