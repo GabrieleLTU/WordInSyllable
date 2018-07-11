@@ -4,12 +4,17 @@ use SplFileObject;
   class WorkWithFile implements IOinterface
   {
     private $fileContent;
-    private $file;
+    private $fileInput;
+    private $fileOutput;
 
-    public function setFile($fileName)
+    public function setInputFile($fileName)
     {
-      $this->file = new SplFileObject($fileName);
-      //$fileInfo->getRealPath();
+      $this->fileInput = new SplFileObject($fileName);
+    }
+
+    public function setOutputFile($fileName)
+    {
+      $this->fileOutput = new SplFileObject($fileName, 'a+');
     }
 
     public function setContent($content)
@@ -25,9 +30,9 @@ use SplFileObject;
     public function inputContent()
     {
       $fileContent;
-      while (!$this->file->eof()) {
-          $fileContent[] = $this->file->current();
-          $this->file->next();
+      while (!$this->fileInput->eof()) {
+          $fileContent[] = $this->fileInput->current();
+          $this->fileInput->next();
       }
       //echo "fileContent: "; print_r($fileContent);
       $this->fileContent = $fileContent;
@@ -42,8 +47,11 @@ use SplFileObject;
 // writeFileContentInFile
     public function outputContent ()
     {
-      file_put_contents($this->file, $this->fileContent, FILE_APPEND);//print_r($this->fileContent));
-  //file_put_contents($this->file, $content, FILE_APPEND);
+      foreach ($this->fileContent as $line) {
+        $this->fileOutput->fwrite($line);
+      }
+      //$this->file->fwrite();
+      //file_put_contents($this->file, $this->fileContent, FILE_APPEND);//print_r($this->fileContent));
     }
   }
 ?>

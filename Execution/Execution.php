@@ -37,6 +37,7 @@ use WordInSyllable\Logger\FileLogger;
       foreach ($wordsList as $words) { //wordsList - array of file/console line
         $splitWord = preg_split("/\b/", $words);//array of words of one line
         //echo "splitWord: "; var_dump($splitWord);
+        $oneELement = "";
 
         foreach ($splitWord as $word) {//words - one line
           $temp = preg_replace('/[^[:alpha:]]/', '', $word);
@@ -119,7 +120,7 @@ use WordInSyllable\Logger\FileLogger;
       echo "Write file destination:\n";
       $input = fopen ("php://stdin","r");
       $choice = trim(fgets($input));
-      $file->setFile($choice);
+      $file->setInputFile($choice);
       //$file->setFile("https://gist.githubusercontent.com/cosmologicon/1e7291714094d71a0e25678316141586/raw/006f7e9093dc7ad72b12ff9f1da649822e56d39d/tex-hyphenation-patterns.txt");
       $file->inputContent();//Data\syllable_example.txt");//
       //$file->setFile('Data\filename.txt');
@@ -149,7 +150,7 @@ use WordInSyllable\Logger\FileLogger;
                echo "Write file destination:\n";
                $input = fopen ("php://stdin","r");
                $choice = trim(fgets($input));
-               $output->setFile($choice);
+               $output->setOutputFile($choice);
                //$output->setFile("Data\SyllableWords.txt");
          	 		 break;
           case 'e':
