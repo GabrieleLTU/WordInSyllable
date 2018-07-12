@@ -12,11 +12,10 @@
         function __construct()
         {
             $this->connect();
-            $this->insert("word", ['word'], ["words"]);
-            $this->delete("word");
+            //$this->delete("syllable");
         }
 
-        public function connect(): void
+        private function connect(): void
         {
             $servername = "localhost";
             $username = "root";
@@ -41,7 +40,7 @@
         public function delete(string $tableName, array $where = []): void
         {
             try {
-                $query = "DELETE FROM " . $tableName;
+                $query = "DELETE FROM {$tableName} ";
                 if (!empty($where)) {
                     $query = $query . " WHERE " . implode(", ", $where);
                 }
@@ -50,7 +49,8 @@
                 $sql->execute();
 
             } catch (\Exception $e) {
-                $error = "Delete table '" . $tableName . "' data fail: " . $e->getMessage() . "\n";
+                $error = "Delete table '" . $tableName .
+                "' data fail: " . $e->getMessage() . "\n";
                 throw new \Exception($error);
             }
         }
