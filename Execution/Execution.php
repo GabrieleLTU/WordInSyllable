@@ -15,9 +15,9 @@
         {
             //$h = new WorkWithDB(); die();
             echo "
-            w - word(s) into syllbles;
-            s - added syllables to database;
-            Your choice: ";
+                w - word(s) into syllbles;
+                s - added syllables to database;
+                Your choice: ";
             $input = fopen ("php://stdin","r");
             $choice = trim(fgets($input));
 
@@ -40,13 +40,24 @@
             try {
                 //$loggerObject = new FileLogger('Data\logger_execute.txt');
                 $wordsList = $this->getWords();
-                $syllablesList = $this->getSyllables();
-                $syllabledWordsList = $this->wordsInSyllableAlgorithm2(
-                    $wordsList,
-                    $syllablesList,
-                    "Data\logger_execute.txt",
-                    true
-                );
+                $returnSyllables = $this->getSyllables();
+                if (is_array($returnSyllables[0])) {
+                    $syllablesList = $returnSyllables[0];
+                    $syllabledWordsList = $this->wordsInSyllableAlgorithm2(
+                        $wordsList,
+                        $syllablesList,
+                        "Data\logger_execute.txt",
+                        $returnSyllables[1]
+                    );
+                } else {
+                    $syllablesList = $returnSyllables;
+                    $syllabledWordsList = $this->wordsInSyllableAlgorithm2(
+                        $wordsList,
+                        $syllablesList,
+                        "Data\logger_execute.txt",
+                        null
+                    );
+                }
                 $this->outputContent($syllabledWordsList);
             } catch (\Exception $e) {
                 $error = "Execute WordInSyl fail: " . $e->getMessage() . "\n";
@@ -59,6 +70,7 @@
             $syllablesArray = $this->getSyllables();
             $db = new WorkWithDB;
             foreach ($syllablesArray as $syllable) {
+                $i++;
                 try {
                     $db->insertSyllable($syllable);
                 } catch (\Exception $e) {
@@ -72,25 +84,23 @@
             array $wordsList,
             array $syllables,
             $loggerFile = NULL,
-            boolean $saveInDatabase
+            WorkWithDB $dbObj = NULL
             ): array
         {
             $syllabledWordsList = [];
             $oneELement = "";
-            //echo "param: "; var_dump($wordsList);
 
             foreach ($wordsList as $words) { //wordsList - array of file/console line
                 $splitWord = preg_split("/\b/", $words);//array of words of one line
-                //echo "splitWord: "; var_dump($splitWord);
                 $oneELement = "";
                 foreach ($splitWord as $word) {//words - one line
                     $temp = preg_replace('/[^[:alpha:]]/i', '', $word);
-                    //var_dump($word); echo " -> ";
-                    //var_dump($temp); echo " -> ".strlen($temp);
                     if (strlen($temp) > 0) {
-                        //echo "to syllable: " . $word . "\n";
-                        $oneWord = new WordInSyllableRegExp($word, $loggerFile);
-                        $oneELement = $oneELement . $oneWord->checkWordWithAllSyllables($syllables);
+                        $oneWord = new WordInSyllableRegExp(
+                            $word,
+                            $loggerFile,
+                            $dbObj);
+                        $oneELement = $oneELement . $oneWord->wordIntoSyllable($syllables);//checkWordWithAllSyllables($syllables);
                     } else {
                         $oneELement = $oneELement.$word;
                     }
@@ -164,7 +174,14 @@
                     $syllablesList = $this->getDataFromFile();
             		break;
               case 'd':
-                    $syllablesList = $this->getSyllablesFromDatabase();
+                    try {
+                        $dbObj = new WorkWithDB;
+                        $syllablesList = $this->getSyllablesFromDatabase($dbObj);
+                        return [$syllablesList, $dbObj];
+                    } catch (\Exception $e) {
+                        $error = "Get syllables from " . $e->getMessage() . "\n";
+                        throw new \Exception($error);
+                    }
             		break;
           		default:
                     $error = "Your choice is not correct. \n";
@@ -195,25 +212,24 @@
             return $fromConsole->getContent();
         }
 
-        private function getSyllablesFromDatabase(): array
+        private function getSyllablesFromDatabase(WorkWithDB $dbObj): array
         {
             try {
-                $fromDB = new WorkWithDB;
-                //var_dump($fromDB->selectSyllables());
-                return $fromDB->selectSyllables();
+                return $dbObj->selectSyllables();
             } catch (\Exception $e) {
                 $error = "Database fail: " . $e->getMessage() . "\n";
                 throw new \Exception($error);
             }
-
         }
 
         /**
          * @param array/string
          */
-        private function outputContent ($outputData)
+        private function outputContent ($outputData): void
         {
-            echo "Output data to:\nc - console;\nf -  file;\n";
+            echo "Output data to:
+            c - console;
+            f -  file;\n";
             $input = fopen ("php://stdin","r");
             $choice = trim(fgets($input));
 

@@ -1,6 +1,7 @@
 <?php
     namespace WordInSyllable\IntoSyllable;
 
+    use WordInSyllable\Database\WorkWithDB;
     use WordInSyllable\IntoSyllable\Word;
     use WordInSyllable\IO_Classes\IOinterface;
     use SplFileObject;
@@ -13,8 +14,11 @@
         private $dbObj;
         private $wordId;
 
-        function __construct(string $word, string $loggerFile, WorkWithDB $dbObj = NULL)
-        {
+        function __construct(
+            string $word,
+            string $loggerFile,
+            WorkWithDB $dbObj = NULL
+        ) {
             try {
                 $this->word = $word;
                 $this->loggerFile = new SplFileObject($loggerFile);
@@ -26,21 +30,38 @@
                 throw new \Exception($error);
             }
         }
+        public function wordIntoSyllable(array $syllables): string
+        {
+            if (!is_null($this->dbObj)){
+                $wordData = $this->dbObj->insertIfNotExist(
+                    "word",
+                    ["word"],
+                    [$this->word],
+                    ["syllableWord"]
+                );
+                if (is_null($wordData[0]["syllableWord"])) {
+                    $return = $this->checkWordWithAllSyllables($syllables);
+                    $this->dbObj->update("word", ["syllableWord"], [$return], [" word= '$this->word'"]);
+                    return $return;
+                } else {
+                    return $wordData[0]["syllableWord"];
+                }
+            } else {
+                return $this->checkWordWithAllSyllables($syllables);
+            }
+        }
 
         public function checkWordWithAllSyllables(array $syllables): string
         {
-            if (!is_null($dbObj)) {
-                //ar toks jau yra;
-                //ne  -> irasom ir gaunam ID
-                //taip-> grazinam suskiemenuota zodi
-            }
 
             //parameter: int $start_index , int $num , mixed $value
             $this->position = array_fill (0, strlen($this->word), 0);
             foreach ($syllables as $syllable) {
+                //echo $this->word . $syllable;
                 $this->checkWord($syllable);
             }
-            return $this->syllableWord;
+
+            return  (is_null($this->syllableWord)) ? $this->word : $this->syllableWord ;
         }
 
         private function checkWord(string $syllable)

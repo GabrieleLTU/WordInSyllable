@@ -12,7 +12,9 @@
         function __construct()
         {
             $this->connect();
-            var_dump($this->select("syllable"));//, , [""]));
+            //var_dump(($this->select("syllable"))[1]["syllable"]);//, , [""]));
+            //echo "v_d:\n";
+            //var_dump($this->insertIfNotExist("word", ["word","syllableWord"], ["kaa", "ka-a"]));
             // string $tableName,
             // $atributresName = " * ",
             // array $where = []
@@ -45,7 +47,7 @@
             try {
                 $query = "DELETE FROM {$tableName} ";
                 if (!empty($where)) {
-                    $query = $query . " WHERE " . implode(", ", $where);
+                    $query .= " WHERE " . implode(", ", $where);
                 }
 
                 $sql = $this->connection->prepare($query);
@@ -69,13 +71,13 @@
                 $query .= "( " . implode(", ", $atributeName) . ") ";
                 $query .= "VALUES (:" .  implode(", :", $atributeName) . ") ";
                 if (!empty($where)) {
-                    $query = $query . " WHERE " . implode(", ", $where);
+                    $query = $query . " WHERE " . implode(" AND ", $where);
                 }
 
                 $sql = $this->connection->prepare($query);
                 for ($i=0; $i < count($atributeName); $i++) {
                     $sql->bindParam(
-                        ":" . $atributeName[$i] . "",
+                        ":{$atributeName[$i]}",
                         $values[$i]);
                 }
                 $sql->execute();
@@ -84,7 +86,6 @@
                 $error = "Insert query fail: " . $e->getMessage() . "\n";
                 throw new \Exception($error);
             }
-
         }
 
         public function update(
@@ -94,20 +95,21 @@
             array $where = []
             ): void {
             try {
-                $query = "UPDATE " . $tableName . " SET ";
-                for ($i=0; $i < count($atributeName); $i++) {
-                    $query = $query . $atributeName[$i] . "= :" . $atributeName[$i] . ", ";
+                $query = "UPDATE {$tableName} SET ";
+                foreach ($atributeName as $key => $value) {
+                    $query .=  " {$value}=:{$value}, ";
+                    // if ($key != count($atributeName)) {
+                    //     $query .=  ", ";
+                    // }
                 }
                 $query = substr($query, 0, -2);
-
                 if (!empty($where)) {
-                    $query = $query . " WHERE " . implode(", ", $where);
+                    $query .= " WHERE " . implode(" AND ", $where);
                 }
-
                 $sql = $this->connection->prepare($query);
                 for ($i=0; $i < count($atributeName); $i++) {
                     $sql->bindParam(
-                        ":" . $atributeName[$i] . "",
+                        ":{$atributeName[$i]}",
                         $values[$i]);
                 }
                 $sql->execute();
@@ -119,21 +121,21 @@
 
         public function select(
             string $tableName,
-            $atributresName = " * ",
+            $atributesName = " * ",
             array $where = []
             ): array
         {
             try {
-                $retVal = (is_array($atributresName)) ? implode(", ", $atributesName) : $atributresName ;
-                $query = "SELECT " . $retVal . " FROM " . $tableName;
+                $selectAtributes = (is_array($atributesName)) ? implode(", ", $atributesName) : $atributesName;
+                $query = "SELECT {$selectAtributes} FROM {$tableName} ";
 
 
                 if (!empty($where)) {
-                    $query = $query . " WHERE " . implode(", ", $where);
+                    $query = $query . " WHERE " . implode(" AND ", $where);
                 }
                 $sql = $this->connection->prepare($query);
                 $sql->execute();
-                $result = $sql->fetchAll(PDO::FETCH_COLUMN, ["s_id"]);
+                $result = $sql->fetchAll(PDO::FETCH_ASSOC);
                 return $result;
 
             } catch (\Exception $e) {
@@ -144,36 +146,46 @@
 
         protected function beginTransaction()
         {
-            $connection->beginTransaction();
+            $this->connection->beginTransaction();
         }
 
         protected function endTransaction()
         {
-            $connection->commit();
+            $this->connection->commit();
             // if ( $all == 'good' ) {
             //     DB::commit();
             // } else {
             //     DB::rollBack();
             // }
         }
+
         /**
+        *insert if not exist and return array of $returnAtributeName of element
+        *@param returnAtributeName - array of atribute's name which are returned in array
         *@return array/null
         */
         public function insertIfNotExist(
             string $tableName,
             array $atributesName,
             array $values,
-            array $returnAtributeName = null
+            $returnAtributeName = "*"
         ) {
             $this->beginTransaction();
-            // $result = $this->select($tableName,
-            //     array $atributresName,
-            //     array $where = []
-            //     )
 
+            $where = [];
+            for ($i=0; $i < count($values); $i++) {
+                $where[] = "{$atributesName[$i]} = '{$values[$i]}'";
+            }
+            $selectResult = $this->select($tableName, $returnAtributeName, $where);
 
+            if (empty($selectResult)) {
+                $this->insert($tableName, $atributesName, $values);
+                $selectResult = $this->select($tableName, $returnAtributeName, $where);
 
+            }
             $this->endTransaction();
+
+            return $selectResult;
         }
 
         //---WORD TABLE---//
