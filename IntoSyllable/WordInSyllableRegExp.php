@@ -10,17 +10,31 @@
         private $position;
         private $syllableWord;
         private $loggerFile;
+        private $dbObj;
+        private $wordId;
 
-        function __construct(string $word, string $loggerFile)
+        function __construct(string $word, string $loggerFile, WorkWithDB $dbObj = NULL)
         {
-          $this->word = $word;
-          $this->loggerFile = new SplFileObject($loggerFile);
-          //parameter: int $start_index , int $num , mixed $value
-          $this->position = array_fill (0, strlen($this->word), 0);
+            try {
+                $this->word = $word;
+                $this->loggerFile = new SplFileObject($loggerFile);
+                //parameter: int $start_index , int $num , mixed $value
+                $this->position = array_fill (0, strlen($this->word), 0);
+                $this->dbObj = $dbObj;
+            } catch (\Exception $e) {
+                $error = "Creating WordInSyllableRegExp object fail: " . $e->getMessage() . "\n";
+                throw new \Exception($error);
+            }
         }
 
         public function checkWordWithAllSyllables(array $syllables): string
         {
+            if (!is_null($dbObj)) {
+                //ar toks jau yra;
+                //ne  -> irasom ir gaunam ID
+                //taip-> grazinam suskiemenuota zodi
+            }
+
             //parameter: int $start_index , int $num , mixed $value
             $this->position = array_fill (0, strlen($this->word), 0);
             foreach ($syllables as $syllable) {
@@ -98,6 +112,7 @@
             }
             $this->position = $position;
             $this->saveWordSylables();
+            //insert syllableByWord
         }
 
         private function saveWordSylables()

@@ -12,7 +12,10 @@
         function __construct()
         {
             $this->connect();
-            //$this->delete("syllable");
+            var_dump($this->select("syllable"));//, , [""]));
+            // string $tableName,
+            // $atributresName = " * ",
+            // array $where = []
         }
 
         private function connect(): void
@@ -62,10 +65,9 @@
             array $where = []
         ): void {
             try {
-                $query = "INSERT INTO " . $tableName . " (";
-                $query = $query . implode(", ", $atributeName);
-                $query = $query . ") VALUES (";
-                $query = $query . ":" .  implode(", :", $atributeName) . ") ";
+                $query = "INSERT INTO $tableName ";
+                $query .= "( " . implode(", ", $atributeName) . ") ";
+                $query .= "VALUES (:" .  implode(", :", $atributeName) . ") ";
                 if (!empty($where)) {
                     $query = $query . " WHERE " . implode(", ", $where);
                 }
@@ -117,25 +119,61 @@
 
         public function select(
             string $tableName,
-            array $atributresName,
+            $atributresName = " * ",
             array $where = []
             ): array
         {
             try {
-                $query = "SELECT " . implode(", ", $atributesName) . " FROM " . $tableName;
+                $retVal = (is_array($atributresName)) ? implode(", ", $atributesName) : $atributresName ;
+                $query = "SELECT " . $retVal . " FROM " . $tableName;
+
 
                 if (!empty($where)) {
                     $query = $query . " WHERE " . implode(", ", $where);
                 }
                 $sql = $this->connection->prepare($query);
                 $sql->execute();
-                $result = $sql->fetchAll(PDO::FETCH_COLUMN, 0);
+                $result = $sql->fetchAll(PDO::FETCH_COLUMN, ["s_id"]);
                 return $result;
 
             } catch (\Exception $e) {
                 $error = "Select query fail: " . $e->getMessage() . "\n";
                 throw new \Exception($error);
             }
+        }
+
+        protected function beginTransaction()
+        {
+            $connection->beginTransaction();
+        }
+
+        protected function endTransaction()
+        {
+            $connection->commit();
+            // if ( $all == 'good' ) {
+            //     DB::commit();
+            // } else {
+            //     DB::rollBack();
+            // }
+        }
+        /**
+        *@return array/null
+        */
+        public function insertIfNotExist(
+            string $tableName,
+            array $atributesName,
+            array $values,
+            array $returnAtributeName = null
+        ) {
+            $this->beginTransaction();
+            // $result = $this->select($tableName,
+            //     array $atributresName,
+            //     array $where = []
+            //     )
+
+
+
+            $this->endTransaction();
         }
 
         //---WORD TABLE---//
