@@ -13,16 +13,19 @@
         {
             $this->connect();
             $this->insert("word", ['word'], ["words"]);
+            $this->delete("word");
         }
 
-        public function connect()
+        public function connect(): void
         {
             $servername = "localhost";
             $username = "root";
             $password = "";
 
             try {
-            $conn = new PDO("mysql:host=$servername;dbname=syllablewords", $username, $password);
+            $conn = new PDO("mysql:host=$servername;dbname=syllablewords",
+                $username,
+                $password);
             // set the PDO error mode to exception
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->connection = $conn;
@@ -35,27 +38,37 @@
             }
         }
 
-        public function deleteTableData(string $tableName)
+        public function delete(string $tableName, array $where = []): void
         {
             try {
-                $sql = $this->connection->prepare('DELETE * FROM ?');
-                $sql->bindParam(1, $tableName, PDO::PARAM_STR, 255);
+                $query = "DELETE FROM " . $tableName;
+                if (!empty($where)) {
+                    $query = $query . " WHERE " . implode(", ", $where);
+                }
+
+                $sql = $this->connection->prepare($query);
                 $sql->execute();
+
             } catch (\Exception $e) {
-                $error = "Delete table '" . $tableName . "' data from database fail: " . $e->getMessage() . "\n";
+                $error = "Delete table '" . $tableName . "' data fail: " . $e->getMessage() . "\n";
                 throw new \Exception($error);
             }
         }
 
-        public function insert(string $tableName,
+        public function insert(
+            string $tableName,
             array $atributeName,
-            array $values)
-        {
+            array $values,
+            array $where = []
+        ): void {
             try {
                 $query = "INSERT INTO " . $tableName . " (";
                 $query = $query . implode(", ", $atributeName);
                 $query = $query . ") VALUES (";
                 $query = $query . ":" .  implode(", :", $atributeName) . ") ";
+                if (!empty($where)) {
+                    $query = $query . " WHERE " . implode(", ", $where);
+                }
 
                 $sql = $this->connection->prepare($query);
                 for ($i=0; $i < count($atributeName); $i++) {
@@ -66,17 +79,18 @@
                 $sql->execute();
 
             } catch (\Exception $e) {
-                echo $e->getMessage();
+                $error = "Insert query fail: " . $e->getMessage() . "\n";
+                throw new \Exception($error);
             }
 
         }
 
-        public function update(string $tableName,
+        public function update(
+            string $tableName,
             array $atributeName,
             array $values,
-            array $where
-            )
-        {
+            array $where = []
+            ): void {
             try {
                 $query = "UPDATE " . $tableName . " SET ";
                 for ($i=0; $i < count($atributeName); $i++) {
@@ -84,7 +98,7 @@
                 }
                 $query = substr($query, 0, -2);
 
-                if (!empty($where) || !is_null($where)) {
+                if (!empty($where)) {
                     $query = $query . " WHERE " . implode(", ", $where);
                 }
 
@@ -96,7 +110,30 @@
                 }
                 $sql->execute();
             } catch (\Exception $e) {
-                $error = "Update word in database fail: " . $e->getMessage() . "\n";
+                $error = "Update query fail: " . $e->getMessage() . "\n";
+                throw new \Exception($error);
+            }
+        }
+
+        public function select(
+            string $tableName,
+            array $atributresName,
+            array $where = []
+            ): array
+        {
+            try {
+                $query = "SELECT " . implode(", ", $atributesName) . " FROM " . $tableName;
+
+                if (!empty($where)) {
+                    $query = $query . " WHERE " . implode(", ", $where);
+                }
+                $sql = $this->connection->prepare($query);
+                $sql->execute();
+                $result = $sql->fetchAll(PDO::FETCH_COLUMN, 0);
+                return $result;
+
+            } catch (\Exception $e) {
+                $error = "Select query fail: " . $e->getMessage() . "\n";
                 throw new \Exception($error);
             }
         }
@@ -160,7 +197,7 @@
                 return $result;
 
             } catch (\Exception $e) {
-                $error = "Insert syllable in database fail: " . $e->getMessage() . "\n";
+                $error = "Select query fail: " . $e->getMessage() . "\n";
                 throw new \Exception($error);
             }
         }
