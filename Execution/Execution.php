@@ -49,6 +49,7 @@
                         "Data\logger_execute.txt",
                         $returnSyllables[1]
                     );
+                    $this->outputContent($syllabledWordsList, $returnSyllables[1]);
                 } else {
                     $syllablesList = $returnSyllables;
                     $syllabledWordsList = $this->wordsInSyllableAlgorithm2(
@@ -57,8 +58,9 @@
                         "Data\logger_execute.txt",
                         null
                     );
+                    $this->outputContent($syllabledWordsList);
                 }
-                $this->outputContent($syllabledWordsList, $returnSyllables[1]);
+
             } catch (\Exception $e) {
                 $error = "Execute WordInSyl fail: " . $e->getMessage() . "\n";
                 throw new \Exception($error);
@@ -265,18 +267,22 @@
             if (isset($output)) {
                 $output->setContent($outputData);
                 $output->outputContent();
-                $syllableToOutput = $dbObj->selectInnerJoin(
-                    ["syllable", "syllablebyword", "word"],
-                    ["syllable"],
-                    ["syllable.s_id=syllablebyword.s_id", "word.w_id=syllablebyword.w_id"],
-                    ["syllableword='$outputData[0]'"]
-                );
-                for ($i=0; $i < count($syllableToOutput); $i++) {
-                    $syllableToOutput2[] = $syllableToOutput[$i]["syllable"];
+                if (!is_null($dbObj)) {
+                    $syllableToOutput = $dbObj->selectInnerJoin(
+                        ["syllable", "syllablebyword", "word"],
+                        ["syllable"],
+                        ["syllable.s_id=syllablebyword.s_id", "word.w_id=syllablebyword.w_id"],
+                        ["syllableword='$outputData[0]'"]
+                    );
+                    $syllableToOutput2 []= "Syllables: \n";
+                    for ($i=0; $i < count($syllableToOutput); $i++) {
+                        $syllableToOutput2[] = $syllableToOutput[$i]["syllable"];
+                    }
+                    $syllableToOutput2 = (count($syllableToOutput2)==1) ? " " : $syllableToOutput2;
+                    $output->setContent($syllableToOutput2);
+                    $output->outputContent();
                 }
-                echo "Syllables: \n";
-                $output->setContent($syllableToOutput2);
-                $output->outputContent();
+
             }
         }
     }

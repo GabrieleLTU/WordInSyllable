@@ -1,24 +1,35 @@
 <?php
     namespace WordInSyllable\Database;
 
+    use Exception;
     use PDO;
+    use PDOException;
+
     /**
      *
      */
     class WorkWithDB
     {
+        /* @var PDO */
         private $connection;
 
+        /**
+         * WorkWithDB constructor.
+         * @throws Exception
+         */
         function __construct()
         {
             $this->connect();
         }
 
+        /**
+         * @throws Exception
+         */
         private function connect(): void
         {
             $servername = "localhost";
             $username = "root";
-            $password = "";
+            $password = "labaslabas";
 
             try {
             $conn = new PDO("mysql:host=$servername;dbname=syllablewords",
@@ -32,10 +43,17 @@
             catch(PDOException $e)
             {
                 $error = "Connection failed: " . $e->getMessage() . "\n";
-                throw new \Exception($error);
+                throw new Exception($error);
             }
         }
 
+        /**
+         * @param string $tableName
+         * @param string $atributesName
+         * @param array $where
+         * @return array
+         * @throws Exception
+         */
         public function select(
             string $tableName,
             $atributesName = " * ",
@@ -55,14 +73,20 @@
                 $result = $sql->fetchAll(PDO::FETCH_ASSOC);
                 return $result;
 
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $error = "Select query fail: " . $e->getMessage() . "\n";
-                throw new \Exception($error);
+                throw new Exception($error);
             }
         }
+
         /**
-        *@param atributesName-array/string
-        */
+         * @param array $tablesName
+         * @param string $atributesName
+         * @param array $onList
+         * @param array $where
+         * @return array
+         * @throws Exception
+         */
         public function selectInnerJoin(
             array $tablesName,
             $atributesName = " * ",
@@ -88,12 +112,19 @@
                 $result = $sql->fetchAll(PDO::FETCH_ASSOC);
                 return $result;
 
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $error = "Select query fail: " . $e->getMessage() . "\n";
-                throw new \Exception($error);
+                throw new Exception($error);
             }
         }
 
+        /**
+         * @param string $tableName
+         * @param array $atributeName
+         * @param array $values
+         * @param array $where
+         * @throws Exception
+         */
         public function insert(
             string $tableName,
             array $atributeName,
@@ -116,12 +147,19 @@
                 }
                 $sql->execute();
 
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $error = "Insert query fail: " . $e->getMessage() . "\n";
-                throw new \Exception($error);
+                throw new Exception($error);
             }
         }
 
+        /**
+         * @param string $tableName
+         * @param array $atributeName
+         * @param array $values
+         * @param array $where
+         * @throws Exception
+         */
         public function update(
             string $tableName,
             array $atributeName,
@@ -147,12 +185,17 @@
                         $values[$i]);
                 }
                 $sql->execute();
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $error = "Update query fail: " . $e->getMessage() . "\n";
-                throw new \Exception($error);
+                throw new Exception($error);
             }
         }
 
+        /**
+         * @param string $tableName
+         * @param array $where
+         * @throws Exception
+         */
         public function delete(string $tableName, array $where = []): void
         {
             try {
@@ -164,10 +207,10 @@
                 $sql = $this->connection->prepare($query);
                 $sql->execute();
 
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $error = "Delete table '" . $tableName .
                 "' data fail: " . $e->getMessage() . "\n";
-                throw new \Exception($error);
+                throw new Exception($error);
             }
         }
 
@@ -187,10 +230,14 @@
         }
 
         /**
-        *insert if not exist and return array of $returnAtributeName of element
-        *@param returnAtributeName - array of atribute's name which are returned in array
-        *@return array/null
-        */
+         *insert if not exist and return array of $returnAtributeName of element
+         * @param string $tableName
+         * @param array $atributesName
+         * @param array $values
+         * @param string $returnAtributeName
+         * @return array/null
+         * @throws Exception
+         */
         public function insertIfNotExist(
             string $tableName,
             array $atributesName,
@@ -224,12 +271,17 @@
                 $sql->bindParam(2, $syllableWord, PDO::PARAM_STR, 255);
                 $sql->execute();
                 //echo "New record created successfully";
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $error = "Insert word in database fail: " . $e->getMessage() . "\n";
-                throw new \Exception($error);
+                throw new Exception($error);
             }
         }
 
+        /**
+         * @param string $byWord
+         * @param string|NULL $syllableWord
+         * @throws Exception
+         */
         public function updateWordByWord(string $byWord, string $syllableWord = NULL)
         {
             try {
@@ -238,9 +290,9 @@
                 $sql->bindParam(1, $syllableWord, PDO::PARAM_STR, 255);
                 $sql->execute();
                 //echo "New record updated successfully";
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $error = "Update word in database fail: " . $e->getMessage() . "\n";
-                throw new \Exception($error);
+                throw new Exception($error);
             }
         }
         /**
@@ -252,6 +304,11 @@
         }
 
         //---SYLLABLE TABLE---//
+
+        /**
+         * @param string $syllable
+         * @throws Exception
+         */
         public function insertSyllable(string $syllable)
         {
             try {
@@ -259,12 +316,16 @@
                 $sql->bindParam(1, $syllable, PDO::PARAM_STR, 255);
                 $sql->execute();
                 //echo "New record created successfully";
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $error = "Insert syllable in database fail: " . $e->getMessage() . "\n";
-                throw new \Exception($error);
+                throw new Exception($error);
             }
         }
 
+        /**
+         * @return array
+         * @throws Exception
+         */
         public function selectSyllables(): array
         {
             try {
@@ -273,13 +334,19 @@
                 $result = $sth->fetchAll(PDO::FETCH_COLUMN, 0);
                 return $result;
 
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $error = "Select query fail: " . $e->getMessage() . "\n";
-                throw new \Exception($error);
+                throw new Exception($error);
             }
         }
 
         //---WORD, SYLLABLE, SYLLABLEBYWORD TABLES---//
+
+        /**
+         * @param string $word
+         * @param string $syllable
+         * @throws Exception
+         */
         public function insertSyllableByWord(string $word, string $syllable)
         {
             try {
@@ -287,9 +354,9 @@
                 $sql->bindParam(1, $syllable, PDO::PARAM_STR, 255);
                 $sql->execute();
                 //echo "New record created successfully";
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $error = "Insert syllable in database fail: " . $e->getMessage() . "\n";
-                throw new \Exception($error);
+                throw new Exception($error);
             }
         }
 
