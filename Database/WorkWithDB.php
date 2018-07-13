@@ -12,12 +12,6 @@
         function __construct()
         {
             $this->connect();
-            //var_dump(($this->select("syllable"))[1]["syllable"]);//, , [""]));
-            //echo "v_d:\n";
-            //var_dump($this->insertIfNotExist("word", ["word","syllableWord"], ["kaa", "ka-a"]));
-            // string $tableName,
-            // $atributresName = " * ",
-            // array $where = []
         }
 
         private function connect(): void
@@ -42,20 +36,61 @@
             }
         }
 
-        public function delete(string $tableName, array $where = []): void
+        public function select(
+            string $tableName,
+            $atributesName = " * ",
+            array $where = []
+            ): array
         {
             try {
-                $query = "DELETE FROM {$tableName} ";
-                if (!empty($where)) {
-                    $query .= " WHERE " . implode(", ", $where);
-                }
+                $selectAtributes = (is_array($atributesName)) ? implode(", ", $atributesName) : $atributesName;
+                $query = "SELECT {$selectAtributes} FROM {$tableName} ";
 
+
+                if (!empty($where)) {
+                    $query = $query . " WHERE " . implode(" AND ", $where);
+                }
                 $sql = $this->connection->prepare($query);
                 $sql->execute();
+                $result = $sql->fetchAll(PDO::FETCH_ASSOC);
+                return $result;
 
             } catch (\Exception $e) {
-                $error = "Delete table '" . $tableName .
-                "' data fail: " . $e->getMessage() . "\n";
+                $error = "Select query fail: " . $e->getMessage() . "\n";
+                throw new \Exception($error);
+            }
+        }
+        /**
+        *@param atributesName-array/string
+        */
+        public function selectInnerJoin(
+            array $tablesName,
+            $atributesName = " * ",
+            array $onList = [],
+            array $where = []
+            ): array
+        {
+            try {
+                $selectAtributes = (is_array($atributesName)) ? implode(", ", $atributesName) : $atributesName;
+                $from = "";
+                for ($i=0; $i < count($tablesName)-1; $i++) {
+                    $from .= " $tablesName[$i] INNER JOIN " . $tablesName[$i+1] . " ON $onList[$i]";
+                }
+
+                $query = "SELECT {$selectAtributes} FROM {$from} ";
+
+
+                if (!empty($where)) {
+                    $query = $query . " WHERE " . implode(" AND ", $where);
+                }
+                var_dump($query);
+                $sql = $this->connection->prepare($query);
+                $sql->execute();
+                $result = $sql->fetchAll(PDO::FETCH_ASSOC);
+                return $result;
+
+            } catch (\Exception $e) {
+                $error = "Select query fail: " . $e->getMessage() . "\n";
                 throw new \Exception($error);
             }
         }
@@ -119,37 +154,30 @@
             }
         }
 
-        public function select(
-            string $tableName,
-            $atributesName = " * ",
-            array $where = []
-            ): array
+        public function delete(string $tableName, array $where = []): void
         {
             try {
-                $selectAtributes = (is_array($atributesName)) ? implode(", ", $atributesName) : $atributesName;
-                $query = "SELECT {$selectAtributes} FROM {$tableName} ";
-
-
+                $query = "DELETE FROM {$tableName} ";
                 if (!empty($where)) {
-                    $query = $query . " WHERE " . implode(" AND ", $where);
+                    $query .= " WHERE " . implode(", ", $where);
                 }
+
                 $sql = $this->connection->prepare($query);
                 $sql->execute();
-                $result = $sql->fetchAll(PDO::FETCH_ASSOC);
-                return $result;
 
             } catch (\Exception $e) {
-                $error = "Select query fail: " . $e->getMessage() . "\n";
+                $error = "Delete table '" . $tableName .
+                "' data fail: " . $e->getMessage() . "\n";
                 throw new \Exception($error);
             }
         }
 
-        protected function beginTransaction()
+        public function beginTransaction()
         {
             $this->connection->beginTransaction();
         }
 
-        protected function endTransaction()
+        public function endTransaction()
         {
             $this->connection->commit();
             // if ( $all == 'good' ) {

@@ -58,7 +58,7 @@
                         null
                     );
                 }
-                $this->outputContent($syllabledWordsList);
+                $this->outputContent($syllabledWordsList, $returnSyllables[1]);
             } catch (\Exception $e) {
                 $error = "Execute WordInSyl fail: " . $e->getMessage() . "\n";
                 throw new \Exception($error);
@@ -67,17 +67,27 @@
 
         private function writeNewSyllablesToDB()
         {
-            $syllablesArray = $this->getSyllables();
-            $db = new WorkWithDB;
-            foreach ($syllablesArray as $syllable) {
-                $i++;
-                try {
-                    $db->insertSyllable($syllable);
-                } catch (\Exception $e) {
-                    echo $e->getMessage();
+            try {
+                $syllablesArray = $this->getSyllables();
+                $db = new WorkWithDB;
+                $db->beginTransaction();
+                $db->delete("syllable");
+                $db->delete("word");
+                $db->delete("syllablebyword");
+                foreach ($syllablesArray as $syllable) {
+                    try {
+                        $db->insertSyllable($syllable);
+                    } catch (\Exception $e) {
+                        echo $e->getMessage();
+                    }
                 }
+                $db->endTransaction();
+                echo "Syllables insert end.";
+            } catch (\Exception $e) {
+                $error = "write new syllables fail: " . $e->getMessage() . "\n";
+                throw new \Exception($error);
             }
-            echo "Syllables insert end.";
+
         }
 
         private function wordsInSyllableAlgorithm2(
@@ -223,9 +233,9 @@
         }
 
         /**
-         * @param array/string
+         * @param outputData-array/string
          */
-        private function outputContent ($outputData): void
+        private function outputContent ($outputData, WorkWithDB $dbObj=null): void
         {
             echo "Output data to:
             c - console;
@@ -252,9 +262,17 @@
                     throw new \Exception($error);
                     break;
             		}
-
             if (isset($output)) {
+                var_dump($outputData);
                 $output->setContent($outputData);
+                $output->outputContent();
+                $syllableToOutput = $dbObj->selectInnerJoin(
+                    ["syllable", "syllablebyword", "word"],
+                    ["syllable"],
+                    ["syllable.s_id=syllablebyword.s_id", "word.w_id=syllablebyword.w_id"],
+                    ["word='$outputData[0]'"]
+                );
+                $output->setContent($syllableToOutput);
                 $output->outputContent();
             }
         }

@@ -37,7 +37,7 @@
         {
             $fileContent;
             while (!$this->fileInput->eof()) {
-                $fileContent[] = $this->fileInput->current();
+                $fileContent[] = preg_replace('/[[:space:]]/', '', $this->fileInput->current());
                 $this->fileInput->next();
             }
             $this->fileContent = $fileContent;

@@ -37,8 +37,9 @@
                     "word",
                     ["word"],
                     [$this->word],
-                    ["syllableWord"]
+                    ["syllableWord", "w_id"]
                 );
+                $this->wordId=$wordData[0]["w_id"];
                 if (is_null($wordData[0]["syllableWord"])) {
                     $return = $this->checkWordWithAllSyllables($syllables);
                     $this->dbObj->update("word", ["syllableWord"], [$return], [" word= '$this->word'"]);
@@ -53,7 +54,6 @@
 
         public function checkWordWithAllSyllables(array $syllables): string
         {
-
             //parameter: int $start_index , int $num , mixed $value
             $this->position = array_fill (0, strlen($this->word), 0);
             foreach ($syllables as $syllable) {
@@ -112,20 +112,20 @@
             }
         }
 
-        private function changePosition(string $syllable, int $sylStart)
+        private function changePosition(string $syllable, int $sylStart):void
         {
             $position = $this->position;
-            $syllable = preg_replace('/\./', '', $syllable);
+            $syllableNoDot = preg_replace('/\./', '', $syllable);
             if (($sylStart-1) < 0) {
                 $letterNumber = 0;
             }
             else {
                 $letterNumber = $sylStart - 1;
             }
-            for ($i = (($sylStart-1) < 0) ? 1 : 0; $i < strlen($syllable); $i++) {
-                if (is_numeric($syllable[$i])) {
-                    if ($position[$letterNumber] < $syllable[$i]) {
-                    $position[$letterNumber] = $syllable[$i];
+            for ($i = (($sylStart-1) < 0) ? 1 : 0; $i < strlen($syllableNoDot); $i++) {
+                if (is_numeric($syllableNoDot[$i])) {
+                    if ($position[$letterNumber] < $syllableNoDot[$i]) {
+                    $position[$letterNumber] = $syllableNoDot[$i];
                     }
                 } else {
                   $letterNumber++;
@@ -133,10 +133,24 @@
             }
             $this->position = $position;
             $this->saveWordSylables();
+            if (!is_null($this->dbObj)) {
+                //$this->dbObj->beginTransaction();
+                $syllableId = $this->dbObj->select(
+                    "syllable",
+                    ["s_id"],
+                    ["syllable='$syllable'"]
+                );
+                $this->dbObj->insertIfNotExist(
+                    "syllablebyword",
+                    ["w_id","s_id"],
+                    [$this->wordId, $syllableId[0]["s_id"]]);
+                    //$this->dbObj->endTransaction();
+            }
+
             //insert syllableByWord
         }
 
-        private function saveWordSylables()
+        private function saveWordSylables(): void
         {
             $syllableWord = "";
             $this->position[strlen($this->word)-1] = 0;
