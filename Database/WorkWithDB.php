@@ -72,9 +72,9 @@
         {
             try {
                 $selectAtributes = (is_array($atributesName)) ? implode(", ", $atributesName) : $atributesName;
-                $from = "";
-                for ($i=0; $i < count($tablesName)-1; $i++) {
-                    $from .= " $tablesName[$i] INNER JOIN " . $tablesName[$i+1] . " ON $onList[$i]";
+                $from = " $tablesName[0]";
+                for ($i=1; $i < count($tablesName); $i++) {
+                    $from .= " INNER JOIN $tablesName[$i] ON " . $onList[$i-1];
                 }
 
                 $query = "SELECT {$selectAtributes} FROM {$from} ";
@@ -83,7 +83,6 @@
                 if (!empty($where)) {
                     $query = $query . " WHERE " . implode(" AND ", $where);
                 }
-                var_dump($query);
                 $sql = $this->connection->prepare($query);
                 $sql->execute();
                 $result = $sql->fetchAll(PDO::FETCH_ASSOC);

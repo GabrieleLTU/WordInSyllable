@@ -263,16 +263,19 @@
                     break;
             		}
             if (isset($output)) {
-                var_dump($outputData);
                 $output->setContent($outputData);
                 $output->outputContent();
                 $syllableToOutput = $dbObj->selectInnerJoin(
                     ["syllable", "syllablebyword", "word"],
                     ["syllable"],
                     ["syllable.s_id=syllablebyword.s_id", "word.w_id=syllablebyword.w_id"],
-                    ["word='$outputData[0]'"]
+                    ["syllableword='$outputData[0]'"]
                 );
-                $output->setContent($syllableToOutput);
+                for ($i=0; $i < count($syllableToOutput); $i++) {
+                    $syllableToOutput2[] = $syllableToOutput[$i]["syllable"];
+                }
+                echo "Syllables: \n";
+                $output->setContent($syllableToOutput2);
                 $output->outputContent();
             }
         }
