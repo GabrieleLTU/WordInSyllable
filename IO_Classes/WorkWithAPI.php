@@ -69,7 +69,7 @@
                     ["word", "syllableWord"],
                     [$word, $syllableWord]
                 );
-                
+
             } catch (\Exception $e) {
             }
         }
