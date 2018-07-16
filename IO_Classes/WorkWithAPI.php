@@ -17,12 +17,19 @@
             //$data = preg_split('/\\/', $_SERVER['REQUEST_URI']);
             switch($method) {
                 case 'GET':
-                    if(!empty($_GET["word_id"]))
+//                    if(!empty($_GET["word_id"]))
+//                    {
+//                        $this->getWords(intval($_GET["word_id"]));
+//                    } else {
+//                        $this->getWords();
+//                    }
+                    if (empty($_GET["word_id"]))
                     {
-                        $this->getWords(intval($_GET["word_id"]));
+                        $this->get($_GET["tableName"]);
                     } else {
-                        $this->getWords();
+                        $this->get($_GET["tableName"], $_GET["id"]);
                     }
+
                     break;
                 case 'POST':
                     $this->insertWord();
@@ -47,28 +54,28 @@
             }
         }
 
-//        private function get(string $tableName, int $id = NULL): void
-//        {
-//            $result = null;
-//
-//            try {
-//                if (is_null($id))
-//                {
-//                    $result = $this->conn->select($tableName);
-//                } else {
-//                    $result = $this->conn->select(
-//                        $tableName,
-//                        " * ",
-//                        [$tableName[0] . "_id=$id"]
-//                    );
-//                }
-//
-//            } catch (\Exception $e) {
-//            }
-//
-//            header('Content-Type: application/json');
-//            echo json_encode($result);
-//        }
+        private function get(string $tableName, int $id = NULL): void
+        {
+            $result = null;
+
+            try {
+                if (is_null($id))
+                {
+                    $result = $this->conn->select($tableName);
+                } else {
+                    $result = $this->conn->select(
+                        $tableName,
+                        " * ",
+                        [$tableName[0] . "_id=$id"]
+                    );
+                }
+
+            } catch (\Exception $e) {
+            }
+
+            header('Content-Type: application/json');
+            echo json_encode($result);
+        }
 
         private function getWords(int $word_id = NULL): void
         {
@@ -92,7 +99,7 @@
             echo json_encode($result);
         }
 
-        private function insertWord(int $id): void
+        private function insertWord(): void
         {
             $word=$_POST["word"];
             $syllableWord=$_POST["syllableWord"];
@@ -119,10 +126,13 @@
         private function updateWord(int $w_id): void
         {
             try {
-                parse_str(file_get_contents("php://input"),$post_vars);
-                //$w_id=$post_vars["w_id"];
-                $word=$post_vars["word"];
-                $syllableWord=$post_vars["syllableWord"];
+                $phpInput = json_decode(file_get_contents("php://input"), true);
+                //var_dump($phpInput["word"]);
+                //parse_str($phpInput,$post_vars);
+                $w_id=$w_id;
+                //var_dump($post_vars);
+                $word=$phpInput["word"];
+                $syllableWord=$phpInput["syllableWord"];
                 $this->conn->update(
                     "word",
                     ["word", "syllableWord"],
