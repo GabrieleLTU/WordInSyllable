@@ -3,9 +3,9 @@
 
     use WordInSyllable\Autoloader;
     use WordInSyllable\Execution\Execution;
+use WordInSyllable\IO_Classes\WorkWithAPI;
 
-
-    // instantiate the loader
+// instantiate the loader
     $loader = new Autoloader();
     // register the autoloader
     $loader->register();
@@ -17,5 +17,7 @@
     $loader->addNamespace('WordInSyllable\IO_Classes', __DIR__ . '/IO_Classes');
     $loader->addNamespace('WordInSyllable\Logger', __DIR__ . '/Logger');
 
-    $execute = new Execution();
-    $execute->execute();
+
+    $restApi = new WorkWithAPI();
+//    $execute = new Execution();
+//    $execute->execute();
