@@ -46,6 +46,13 @@
                 throw new Exception($error);
             }
         }
+        public function runQuery (string $query): array
+        {
+            $sql = $this->connection->prepare($query);
+            $sql->execute();
+            $result = $sql->fetchAll(PDO::FETCH_ASSOC);
+            return $result;
+        }
 
         /**
          * @param string $tableName
@@ -250,7 +257,11 @@
             for ($i=0; $i < count($values); $i++) {
                 $where[] = "{$atributesName[$i]} = '{$values[$i]}'";
             }
-            $selectResult = $this->select($tableName, $returnAtributeName, $where);
+            $selectResult = $this->select(
+                $tableName,
+                $returnAtributeName,
+                $where
+            );
 
             if (empty($selectResult)) {
                 $this->insert($tableName, $atributesName, $values);
@@ -260,104 +271,6 @@
             $this->endTransaction();
 
             return $selectResult;
-        }
-
-        //---WORD TABLE---//
-        public function insertWord(string $word, string $syllableWord = NULL)
-        {
-            try {
-                $sql = $this->connection->prepare('INSERT INTO word (word, syllableWord) VALUES (?, ?)');
-                $sql->bindParam(1, $word, PDO::PARAM_STR, 255);
-                $sql->bindParam(2, $syllableWord, PDO::PARAM_STR, 255);
-                $sql->execute();
-                //echo "New record created successfully";
-            } catch (Exception $e) {
-                $error = "Insert word in database fail: " . $e->getMessage() . "\n";
-                throw new Exception($error);
-            }
-        }
-
-        /**
-         * @param string $byWord
-         * @param string|NULL $syllableWord
-         * @throws Exception
-         */
-        public function updateWordByWord(string $byWord, string $syllableWord = NULL)
-        {
-            try {
-                $sql = $this->connection->prepare('UPDATE word SET syllableword = ? WHERE word = ?');
-                $sql->bindParam(2, $word, PDO::PARAM_STR, 255);
-                $sql->bindParam(1, $syllableWord, PDO::PARAM_STR, 255);
-                $sql->execute();
-                //echo "New record updated successfully";
-            } catch (Exception $e) {
-                $error = "Update word in database fail: " . $e->getMessage() . "\n";
-                throw new Exception($error);
-            }
-        }
-        /**
-        *@return string/null
-        */
-        public function findWordWithSyllable()
-        {
-
-        }
-
-        //---SYLLABLE TABLE---//
-
-        /**
-         * @param string $syllable
-         * @throws Exception
-         */
-        public function insertSyllable(string $syllable)
-        {
-            try {
-                $sql = $this->connection->prepare('INSERT INTO syllable (syllable) VALUES (?)');
-                $sql->bindParam(1, $syllable, PDO::PARAM_STR, 255);
-                $sql->execute();
-                //echo "New record created successfully";
-            } catch (Exception $e) {
-                $error = "Insert syllable in database fail: " . $e->getMessage() . "\n";
-                throw new Exception($error);
-            }
-        }
-
-        /**
-         * @return array
-         * @throws Exception
-         */
-        public function selectSyllables(): array
-        {
-            try {
-                $sth = $this->connection->prepare("SELECT syllable FROM syllable");
-                $sth->execute();
-                $result = $sth->fetchAll(PDO::FETCH_COLUMN, 0);
-                return $result;
-
-            } catch (Exception $e) {
-                $error = "Select query fail: " . $e->getMessage() . "\n";
-                throw new Exception($error);
-            }
-        }
-
-        //---WORD, SYLLABLE, SYLLABLEBYWORD TABLES---//
-
-        /**
-         * @param string $word
-         * @param string $syllable
-         * @throws Exception
-         */
-        public function insertSyllableByWord(string $word, string $syllable)
-        {
-            try {
-                $sql = $this->connection->prepare('INSERT INTO syllable (syllable) VALUES (?)');
-                $sql->bindParam(1, $syllable, PDO::PARAM_STR, 255);
-                $sql->execute();
-                //echo "New record created successfully";
-            } catch (Exception $e) {
-                $error = "Insert syllable in database fail: " . $e->getMessage() . "\n";
-                throw new Exception($error);
-            }
         }
 
 

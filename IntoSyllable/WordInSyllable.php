@@ -5,10 +5,10 @@ namespace WordInSyllable\IntoSyllable;
   use WordInSyllable\IO_Classes\IOinterface;
   use SplFileObject;
 
-  final class WordInSyllable extends Word
+  class WordInSyllable extends Word
   {
     private $position;
-    private $syllableWord;
+    //private $syllableWord;
     private $loggerFile;
 
     function __construct($word, $loggerFile)

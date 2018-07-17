@@ -1,9 +1,10 @@
 <?php namespace WordInSyllable\IntoSyllable;
 
-  abstract class Word
+   class Word
   {
     protected $word;
-  //  protected $syllableWord;
+    protected $syllableWord;
+    protected $w_id;
 
     function __construct($word)
     {

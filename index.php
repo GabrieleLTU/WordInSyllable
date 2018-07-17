@@ -2,8 +2,10 @@
     require_once 'Autoloader.php';
 
     use WordInSyllable\Autoloader;
-    use WordInSyllable\Execution\Execution;
-use WordInSyllable\IO_Classes\WorkWithAPI;
+    use WordInSyllable\Database\SqlQueryBuilder;
+use WordInSyllable\Database\WorkWithDB;
+use WordInSyllable\Execution\Execution;
+    use WordInSyllable\IO_Classes\WorkWithAPI;
 
 // instantiate the loader
     $loader = new Autoloader();
@@ -19,5 +21,15 @@ use WordInSyllable\IO_Classes\WorkWithAPI;
 
 
     $restApi = new WorkWithAPI();
+    $restApi->execute();
+
 //    $execute = new Execution();
 //    $execute->execute();
+
+//    $query = (new SqlQueryBuilder)
+//        ->update("word")
+//        ->set(["word", "sylableWord"],["word1", "wo-rd1"])
+//        ->where("w_id=2");
+//
+//     var_dump((string)$query);
+
