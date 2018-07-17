@@ -35,6 +35,10 @@ class SqlQueryBuilder
         return $this;
     }
 
+    /**
+     * @param $tables - array|string
+     * @return SqlQueryBuilder
+     */
     public function from($tables): SqlQueryBuilder
     {
        if (is_array($tables)) {
@@ -46,6 +50,10 @@ class SqlQueryBuilder
         return $this;
     }
 
+    /**
+     * @param $conditions - array|string
+     * @return SqlQueryBuilder
+     */
     public function where($conditions): SqlQueryBuilder
     {
         if (is_array($conditions)) {

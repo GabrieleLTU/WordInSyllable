@@ -46,7 +46,7 @@
                 throw new Exception($error);
             }
         }
-        public function runQuery (string $query): array
+        public function runQuery (SqlQueryBuilder $query): array
         {
             $sql = $this->connection->prepare($query);
             $sql->execute();

@@ -1,6 +1,7 @@
 <?php
 namespace WordInSyllable\IO_Classes;
 
+use WordController;
 use WordInSyllable\Database\WorkWithDB;
 
 class WorkWithAPI
@@ -14,70 +15,87 @@ class WorkWithAPI
 
     public function execute()
     {
-        $method = $_SERVER['REQUEST_METHOD'];
+        $method = strtolower($_SERVER['REQUEST_METHOD']);
         $string = parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
-        echo $string;
         $urlData = explode("/", $string);
-        var_dump($urlData);
-        switch ($method) {
-            case 'GET':
-//                    if(!empty($_GET["word_id"]))
-//                    {
-//                        $this->getWords(intval($_GET["word_id"]));
-//                    } else {
-//                        $this->getWords();
-//                    }
-                if (empty($_GET["word_id"])) {
-                    $this->get($_GET["tableName"]);
-                } else {
-                    $this->get($_GET["tableName"], $_GET["id"]);
-                }
 
-                break;
-            case 'POST':
-                $this->insertWord();
-                break;
+        $controllerName = ucfirst(strtolower($urlData[1])) . "Controller";
+        $controller = new $controllerName();
+        $controller->$method();
 
-            case 'PUT':
-                $w_id = intval($_GET["w_id"]);
-                //$id=$_GET["w_id"];
-                $this->updateWord($w_id);
-                break;
-
-            case 'DELETE':
-                $tableName = $_GET["tableName"];
-                $where = (empty($_GET["where"])) ? null : $_GET["where"];
-                $this->delete($tableName, $where);
-                break;
-
-            default:
-                header('HTTP/1.1 405 Method Not Allowed');
-                header('Allow: GET, PUT, DELETE');
-                break;
-        }
+        //---old swich
+//        switch ($method) {
+//            case 'GET':
+////                    if(!empty($_GET["word_id"]))
+////                    {
+////                        $this->getWords(intval($_GET["word_id"]));
+////                    } else {
+////                        $this->getWords();
+////                    }
+//                if (empty($_GET["word_id"])) {
+//                    $this->get($_GET["tableName"]);
+//                } else {
+//                    $this->get($_GET["tableName"], $_GET["id"]);
+//                }
+//
+//                break;
+//            case 'POST':
+//                $this->insertWord();
+//                break;
+//
+//            case 'PUT':
+//                $w_id = intval($_GET["w_id"]);
+//                //$id=$_GET["w_id"];
+//                $this->updateWord($w_id);
+//                break;
+//
+//            case 'DELETE':
+//                $tableName = $_GET["tableName"];
+//                $where = (empty($_GET["where"])) ? null : $_GET["where"];
+//                $this->delete($tableName, $where);
+//                break;
+//
+//            default:
+//                header('HTTP/1.1 405 Method Not Allowed');
+//                header('Allow: GET, PUT, DELETE');
+//                break;
+//        }
     }
 
-    private function get(string $tableName, int $id = NULL): void
+    private function get(string $tableName, array $where): void
     {
-        $result = null;
-
-        try {
-            if (is_null($id)) {
-                $result = $this->conn->select($tableName);
-            } else {
-                $result = $this->conn->select(
-                    $tableName,
-                    " * ",
-                    [$tableName[0] . "_id=$id"]
-                );
-            }
-
-        } catch (\Exception $e) {
+        switch ($tableName){
+            case "word":
+               // get word(s) data
+                $wordController = new WordController();
+                var_dump($wordController->($where));
+                break;
+            case "syllable":
+                break;
         }
-
-        header('Content-Type: application/json');
-        echo json_encode($result);
     }
+
+//    private function get(string $tableName, int $id = NULL): void
+//    {
+//        $result = null;
+//
+//        try {
+//            if (is_null($id)) {
+//                $result = $this->conn->select($tableName);
+//            } else {
+//                $result = $this->conn->select(
+//                    $tableName,
+//                    " * ",
+//                    [$tableName[0] . "_id=$id"]
+//                );
+//            }
+//
+//        } catch (\Exception $e) {
+//        }
+//
+//        header('Content-Type: application/json');
+//        echo json_encode($result);
+//    }
 
     private function getWords(int $word_id = NULL): void
     {
