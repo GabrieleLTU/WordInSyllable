@@ -24,9 +24,11 @@ class SyllableController
         if(array_key_exists(2, $this->urlData) && !empty($this->urlData[2])){
 
             if (is_numeric($this->urlData[2])){
-                return $this->syllable-> getSyllableData("s_id={$this->urlData[2]}");
+                return $this->syllable
+                    -> getSyllableData("s_id={$this->urlData[2]}");
             } else {
-                return $this->syllable-> getSyllableData("syllable='{$this->urlData[2]}'");
+                return $this->syllable
+                    -> getSyllableData("syllable='{$this->urlData[2]}'");
             }
 
         } else{

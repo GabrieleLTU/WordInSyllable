@@ -71,11 +71,10 @@ class SqlQueryBuilder
     public function where($conditions): SqlQueryBuilder
     {
         if (is_array($conditions)) {
-            $this->where = " WHERE " . implode(", ", $conditions);
+            $this->where = " WHERE " . implode(" AND ", $conditions);
         }else {
             $this->where = " WHERE " . $conditions;
        }
-
         return $this;
     }
 

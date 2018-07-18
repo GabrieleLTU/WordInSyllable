@@ -91,7 +91,7 @@
             $query = (new SqlQueryBuilder)
                 ->delete()
                 ->from("word");
-            $this->workWithDB->runQuery($query);
+             $this->workWithDB->runQuery($query);
         }
 
         public function printAllWordData()
