@@ -92,6 +92,7 @@ class SqlQueryBuilder
     public function set(array $valuesByKey): SqlQueryBuilder
     {
         $temp = [];
+        var_dump($valuesByKey);
         foreach ($valuesByKey as $key => $value){
             //$temp[] = $valuesNames[$key] . "=" . $value;
             $temp[] = "$key='$value'";
@@ -103,6 +104,7 @@ class SqlQueryBuilder
 
     public function __toString(): string
     {
+        echo $this->operation . " " . $this->from . " " . $this->values . " " . $this->where;
         return $this->operation . " " . $this->from . " " . $this->values . " " . $this->where;
     }
 }
