@@ -75,5 +75,23 @@ class Syllable
     }
 
 
+    public function get()
+    {
+        // TODO: Implement get() method.
+    }
 
+    public function put()
+    {
+        // TODO: Implement put() method.
+    }
+
+    public function post()
+    {
+        // TODO: Implement post() method.
+    }
+
+    public function delete()
+    {
+        // TODO: Implement delete() method.
+    }
 }

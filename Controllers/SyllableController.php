@@ -4,11 +4,8 @@ namespace WordInSyllable\Controllers;
 use WordInSyllable\Models\Syllable;
 
 
-class SyllableController
+class SyllableController implements ControllerInterface
 {
-    /**
-     * @var array
-     */
     private $urlData = [];
     private $syllable = null;
 

@@ -10,8 +10,9 @@ namespace WordInSyllable\Controllers;
 
 
 use WordInSyllable\Models\Syllablebyword;
+use WordInSyllable\Controllers\ControllerInterface;
 
-class SyllablebywordController
+class SyllablebywordController implements ControllerInterface
 {
     private $urlData = [];
     private $syllableByWord;
@@ -40,7 +41,6 @@ class SyllablebywordController
                     $where[] = "syllable='{$this->urlData[3]}'";
                 }
                 return $this->syllableByWord->getAllSyllablesOfWord($where);
-                  //  ["w_id={$this->urlData[2]}", "s_id={$this->urlData[3]}"]
 
             } else if (empty($this->urlData[2]) && !empty($this->urlData[3])) {
                 if (!is_numeric($this->urlData[3])){

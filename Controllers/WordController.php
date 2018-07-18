@@ -4,7 +4,7 @@ namespace WordInSyllable\Controllers;
 use WordInSyllable\Models\Word;
 
 
-class WordController
+class WordController implements ControllerInterface
 {
     /**
      * @var array
