@@ -40,46 +40,59 @@
         public function getWordData($condition)
         {
             if (is_null($this->word)) {
-                return $this->workWithDB->runQuery(
-                    (new SqlQueryBuilder)
+                $query = (new SqlQueryBuilder)
                     ->select(["w_id", "word", "syllableWord"])
                     ->from("word")
-                    ->where($condition)
-                );
+                    ->where($condition);
 
+                return $this->workWithDB->runQuery($query);
             }
         }
 
         public function getAllWordsData()
         {
-            return $this->workWithDB->runQuery(
-                (new SqlQueryBuilder)
-                    ->select(["w_id", "word", "syllableWord"])
-                    ->from("word")
-            );
+            $query = (new SqlQueryBuilder)
+                ->select(["w_id", "word", "syllableWord"])
+                ->from("word");
+
+            return $this->workWithDB->runQuery($query);
         }
 
-        public function updateWord()
+        public function insertWord(array $valuesByKey)
         {
+            $query = (new SqlQueryBuilder)
+                ->insertInto("word")
+                ->values($valuesByKey);
+            echo($query);
+            return $this->workWithDB->runQuery($query);
+        }
+
+        public function updateWord(array $valuesByKey, $condition)
+        {
+            $query = (new SqlQueryBuilder)
+                ->update("word")
+                ->set($valuesByKey)
+                ->where($condition);
+
+            return $this->workWithDB->runQuery($query);
         }
 
         public function deleteWord($condition)
         {
-            return $this->workWithDB->runQuery(
-                (new SqlQueryBuilder)
-                    ->delete()
-                    ->from("word")
-                    ->where($condition)
-            );
+            $query = (new SqlQueryBuilder)
+                ->delete()
+                ->from("word")
+                ->where($condition);
+
+            return $this->workWithDB->runQuery($query);
         }
 
         public function deleteAllWords()
         {
-            return $this->workWithDB->runQuery(
-                (new SqlQueryBuilder)
-                    ->delete()
-                    ->from("word")
-            );
+            $query = (new SqlQueryBuilder)
+                ->delete()
+                ->from("word");
+            return $this->workWithDB->runQuery($query);
         }
 
         public function printAllWordData()

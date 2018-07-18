@@ -2,7 +2,6 @@
 namespace WordInSyllable\IO_Classes;
 
 use WordInSyllable\Database\WorkWithDB;
-use WordInSyllable\Controllers\WordController;
 
 class WorkWithAPI
 {
@@ -25,8 +24,8 @@ class WorkWithAPI
 
         //die(var_dump($controllerName));
 
-        $controller = new WordController($urlData);
-        var_dump($controller->$method());
+        $controller = new $controllerName($urlData);
+        echo json_encode($controller->$method());
 
         //---old swich
 //        switch ($method) {

@@ -49,6 +49,20 @@ class SqlQueryBuilder
 
         return $this;
     }
+    /**
+     * @param $tables - array|string
+     * @return SqlQueryBuilder
+     */
+//    public function join($tables, $onCondition): SqlQueryBuilder
+//    {
+//        if (is_array($tables)) {
+//            $this->from = "FROM " . implode(", ", $tables);
+//        }else {
+//            $this->from = "FROM $tables";
+//        }
+//
+//        return $this;
+//    }
 
     /**
      * @param $conditions - array|string
@@ -65,28 +79,28 @@ class SqlQueryBuilder
         return $this;
     }
 
-    public function values(array $valuesNames, array $values): SqlQueryBuilder
+    public function values(array $valuesByKey): SqlQueryBuilder
     {
+        $valuesNames = [];
+        foreach ($valuesByKey[0] as $key => $value){
+            $valuesNames[] = $key;
+        }
         $this->values = "(" . implode(", ", $valuesNames) . ") VALUES ";
-        if (is_array($values[0])) {
-            foreach ($values as $key => $value){
-                $this->values .= "(" .  implode(", ", $value) . ")";
-                if ($key != (count($values)-1))  $this->values .= ", ";
-            }
-            //$this->values = substr( $this->values, -2);
 
-        } else {
-            $this->values .= "(" .  implode(", ", $values) . ") ";
+        foreach ($valuesByKey as $key => $value){
+            $this->values .= "('" .  implode("', '", $value) . "')";
+            if ($key != (count($valuesByKey)-1))  $this->values .= ", ";
         }
 
         return $this;
     }
 
-    public function set(array $valuesNames, array $values): SqlQueryBuilder
+    public function set(array $valuesByKey): SqlQueryBuilder
     {
         $temp = [];
-        foreach ($values as $key => $value){
-            $temp[] = $valuesNames[$key] . "=" . $value;
+        foreach ($valuesByKey as $key => $value){
+            //$temp[] = $valuesNames[$key] . "=" . $value;
+            $temp[] = "$key='$value'";
         }
         $this->values =  " SET " . implode(", ", $temp);
 
@@ -95,13 +109,6 @@ class SqlQueryBuilder
 
     public function __toString(): string
     {
-//        return sprintf(
-//            'SELECT %s FROM %s WHERE %s',
-//            join(', ', $this->atributes),
-//            join(', ', $this->from),
-//            join(' AND ', $this->where)
-//        );
-
         return $this->operation . " " . $this->from . " " . $this->values . " " . $this->where;
     }
 }
