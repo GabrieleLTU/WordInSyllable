@@ -63,7 +63,6 @@
             $query = (new SqlQueryBuilder)
                 ->insertInto("word")
                 ->values($valuesByKey);
-            echo($query);
             return $this->workWithDB->runQuery($query);
         }
 

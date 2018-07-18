@@ -1,12 +1,77 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Gabrielė.Valaikaitė
- * Date: 7/17/18
- * Time: 6:19 PM
- */
+namespace WordInSyllable\Controllers;
+
+use WordInSyllable\Models\Syllable;
+
 
 class SyllableController
 {
+    /**
+     * @var array
+     */
+    private $urlData;
+    private $syllable;
+
+    public function __construct(array $urlData)
+    {
+        $this->urlData = $urlData;
+        $this->syllable = new Syllable();
+    }
+
+
+    public function get(): array
+    {
+        if(array_key_exists(2, $this->urlData) && !empty($this->urlData[2])){
+
+            if (is_numeric($this->urlData[2])){
+                return $this->syllable-> getSyllableData("s_id={$this->urlData[2]}");
+            } else {
+                return $this->syllable-> getSyllableData("syllable='{$this->urlData[2]}'");
+            }
+
+        } else{
+            return $this->syllable-> getAllSyllablesData();
+        }
+    }
+
+    public function put()
+    {
+        $phpInput = json_decode(file_get_contents("php://input"), true);
+
+        if (is_numeric($this->urlData[2])){
+            return $this->syllable-> updateSyllable(
+                $phpInput,
+                "s_id={$this->urlData[2]}"
+            );
+        } else {
+            return $this->syllable-> updateSyllable(
+                $phpInput,
+                "syllable='{$this->urlData[2]}'"
+            );
+        }
+    }
+
+    public function post()
+    {
+        $phpInput = json_decode(file_get_contents("php://input"), true);
+        //die(var_dump($phpInput));
+
+        return $this->syllable-> insertSyllable($phpInput);
+    }
+
+    public function delete()
+    {
+        if(array_key_exists(2, $this->urlData) && !empty($this->urlData[2])){
+
+            if (is_numeric($this->urlData[2])){
+                return $this->syllable-> deleteSyllable("s_id={$this->urlData[2]}");
+            } else {
+                return$this->syllable-> deleteSyllable("syllable='{$this->urlData[2]}'");
+            }
+
+        } else{
+            return $this->syllable-> deleteAllSyllables();
+        }
+    }
 
 }
