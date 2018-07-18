@@ -25,45 +25,49 @@ class SyllablebywordController
 
     public function get(): array
     {
-        if(array_key_exists(2, $this->urlData) && !empty($this->urlData[2])){
-
-            if (is_numeric($this->urlData[2])){
-                if (
-                    array_key_exists(3, $this->urlData)
-                    && !empty($this->urlData[3])
-                ){
-                    return $this->syllableByWord-> getSyllablebywordData(
-                        ["w_id={$this->urlData[2]}", "s_id={$this->urlData[3]}"]);
+        if ((array_key_exists(2, $this->urlData)) && (array_key_exists(3, $this->urlData)))
+        {
+            if (!empty($this->urlData[2]) && !empty($this->urlData[3])) {
+                $where = [];
+                if (is_numeric($this->urlData[2])){
+                    $where[] = "word.w_id={$this->urlData[2]}";
                 } else {
-                    return $this->syllableByWord-> getSyllablebywordData(
-                        "w_id={$this->urlData[2]}");
+                    $where[] = "word='{$this->urlData[2]}'";
+                }
+                if (is_numeric($this->urlData[3])){
+                    $where[] = "syllable.s_id='{$this->urlData[3]}'";
+                } else {
+                    $where[] = "syllable='{$this->urlData[3]}'";
+                }
+                return $this->syllableByWord->getAllSyllablesOfWord($where);
+                  //  ["w_id={$this->urlData[2]}", "s_id={$this->urlData[3]}"]
+
+            } else if (empty($this->urlData[2]) && !empty($this->urlData[3])) {
+                if (!is_numeric($this->urlData[3])){
+                    return $this->syllableByWord-> getAllSyllablesOfWord(
+                        ["syllable='{$this->urlData[3]}'"]
+                    );
+                } else {
+                    return $this->syllableByWord->getSyllablebywordData(
+                        "s_id={$this->urlData[3]}"
+                    );
+                }
+
+            } else if (!empty($this->urlData[2]) && empty($this->urlData[3])) {
+                if (!is_numeric($this->urlData[2])){
+                    return $this->syllableByWord-> getAllSyllablesOfWord(
+                        ["word='{$this->urlData[2]}'"]
+                    );
+                } else {
+                    return $this->syllableByWord->getSyllablebywordData(
+                        "w_id={$this->urlData[2]}"
+                    );
                 }
 
             } else {
-                return $this->syllableByWord-> getAllSyllablesOfWord(
-                    $this->urlData[2]
-                );
+                return $this->syllableByWord->getAllSyllablebywordsData();
             }
-
-        }  else{
-            return $this->syllableByWord-> getAllSyllablebywordsData();
-        }
-
-//        if (!empty($this->urlData[2]) && !empty($this->urlData[3])){
-//            $this->syllableByWord->getSyllablebywordData(
-//                ["w_id={$this->urlData[2]}","s_id={$this->urlData[3]}"]
-//            );
-//        } else if (empty($this->urlData[2]) && !empty($this->urlData[3])){
-//            $this->syllableByWord->getSyllablebywordData(
-//                "s_id={$this->urlData[3]}"
-//            );
-//        } else if (!empty($this->urlData[2]) && empty($this->urlData[3])){
-//            $this->syllableByWord->getSyllablebywordData(
-//                "w_id={$this->urlData[2]}"
-//            );
-//        } else {
-//            $this->syllableByWord->getAllSyllablebywordsData();
-//        }
+        } else return $this->syllableByWord-> getAllSyllablebywordsData();
     }
 
     public function put():void

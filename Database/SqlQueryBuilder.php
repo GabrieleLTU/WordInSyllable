@@ -80,12 +80,7 @@ class SqlQueryBuilder
 
     public function values(array $valuesByKey): SqlQueryBuilder
     {
-        $valuesNames = [];
-        foreach ($valuesByKey[0] as $key => $value){
-            $valuesNames[] = $key;
-        }
-        $this->values = "(" . implode(", ", $valuesNames) . ") VALUES ";
-
+        $this->values = "(" . implode(", ", array_keys($valuesByKey[0])) . ") VALUES ";
         foreach ($valuesByKey as $key => $value){
             $this->values .= "('" .  implode("', '", $value) . "')";
             if ($key != (count($valuesByKey)-1))  $this->values .= ", ";

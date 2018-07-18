@@ -39,14 +39,14 @@ class Syllablebyword
         return $this->workWithDB->runQuery($query);
     }
 
-    public function getAllSyllablesOfWord(string $word):array
+    public function getAllSyllablesOfWord(array $where):array
     {
         try {
             return $this->workWithDB->selectInnerJoin(
                 ["word", "syllablebyword", "syllable"],
-                ["syllable", "syllable.s_id"],
+                ["syllable", "syllable.s_id", "word", "word.w_id"],
                 ["word.w_id=syllablebyword.w_id", "syllablebyword.s_id=syllable.s_id"],
-                ["word='$word'"]
+                $where
             );
         } catch (\Exception $e) {
         }
