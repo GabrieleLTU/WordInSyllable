@@ -9,8 +9,8 @@ class SyllableController
     /**
      * @var array
      */
-    private $urlData;
-    private $syllable;
+    private $urlData = [];
+    private $syllable = null;
 
     public function __construct(array $urlData)
     {
@@ -34,43 +34,41 @@ class SyllableController
         }
     }
 
-    public function put()
+    public function put():void
     {
         $phpInput = json_decode(file_get_contents("php://input"), true);
 
         if (is_numeric($this->urlData[2])){
-            return $this->syllable-> updateSyllable(
+            $this->syllable-> updateSyllable(
                 $phpInput,
                 "s_id={$this->urlData[2]}"
             );
         } else {
-            return $this->syllable-> updateSyllable(
+            $this->syllable-> updateSyllable(
                 $phpInput,
                 "syllable='{$this->urlData[2]}'"
             );
         }
     }
 
-    public function post()
+    public function post():void
     {
         $phpInput = json_decode(file_get_contents("php://input"), true);
-        //die(var_dump($phpInput));
-
-        return $this->syllable-> insertSyllable($phpInput);
+        $this->syllable-> insertSyllable($phpInput);
     }
 
-    public function delete()
+    public function delete():void
     {
         if(array_key_exists(2, $this->urlData) && !empty($this->urlData[2])){
 
             if (is_numeric($this->urlData[2])){
-                return $this->syllable-> deleteSyllable("s_id={$this->urlData[2]}");
+                $this->syllable-> deleteSyllable("s_id={$this->urlData[2]}");
             } else {
-                return$this->syllable-> deleteSyllable("syllable='{$this->urlData[2]}'");
+                $this->syllable-> deleteSyllable("syllable='{$this->urlData[2]}'");
             }
 
         } else{
-            return $this->syllable-> deleteAllSyllables();
+            $this->syllable-> deleteAllSyllables();
         }
     }
 
