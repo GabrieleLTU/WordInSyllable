@@ -17,7 +17,7 @@ class Syllable
         $this->workWithDB = new WorkWithDB();
     }
 
-    public function getSyllableData($condition)
+    public function getSyllableData($condition):array
     {
         if (is_null($this->syllable)) {
             $query = (new SqlQueryBuilder)
@@ -29,7 +29,7 @@ class Syllable
         }
     }
 
-    public function getAllSyllablesData()
+    public function getAllSyllablesData():array
     {
         $query = (new SqlQueryBuilder)
             ->select(["s_id", "syllable"])
@@ -38,40 +38,40 @@ class Syllable
         return $this->workWithDB->runQuery($query);
     }
 
-    public function insertSyllable(array $valuesByKey)
+    public function insertSyllable(array $valuesByKey):void
     {
         $query = (new SqlQueryBuilder)
             ->insertInto("syllable")
             ->values($valuesByKey);
-        return $this->workWithDB->runQuery($query);
+        $this->workWithDB->runQuery($query);
     }
 
-    public function updateSyllable(array $valuesByKey, $condition)
+    public function updateSyllable(array $valuesByKey, $condition):void
     {
         $query = (new SqlQueryBuilder)
             ->update("syllable")
             ->set($valuesByKey)
             ->where($condition);
 
-        return $this->workWithDB->runQuery($query);
+        $this->workWithDB->runQuery($query);
     }
 
-    public function deleteSyllable($condition)
+    public function deleteSyllable($condition):void
     {
         $query = (new SqlQueryBuilder)
             ->delete()
             ->from("syllable")
             ->where($condition);
 
-        return $this->workWithDB->runQuery($query);
+        $this->workWithDB->runQuery($query);
     }
 
-    public function deleteAllSyllables()
+    public function deleteAllSyllables():void
     {
         $query = (new SqlQueryBuilder)
             ->delete()
             ->from("syllable");
-        return $this->workWithDB->runQuery($query);
+        $this->workWithDB->runQuery($query);
     }
 
 

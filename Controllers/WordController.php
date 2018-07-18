@@ -9,8 +9,8 @@ class WordController
     /**
      * @var array
      */
-    private $urlData;
-    private $word;
+    private $urlData = [];
+    private $word = null;
 
     public function __construct(array $urlData)
     {
@@ -34,37 +34,34 @@ class WordController
         }
     }
 
-    public function put()
+    public function put():void
     {
         $phpInput = json_decode(file_get_contents("php://input"), true);
 
         if (is_numeric($this->urlData[2])){
-            return $this->word-> updateWord($phpInput, "w_id={$this->urlData[2]}");
+            $this->word-> updateWord($phpInput, "w_id={$this->urlData[2]}");
         } else {
-            return $this->word-> updateWord($phpInput, "word='{$this->urlData[2]}'");
+            $this->word-> updateWord($phpInput, "word='{$this->urlData[2]}'");
         }
     }
 
-    public function post()
+    public function post():void
     {
         $phpInput = json_decode(file_get_contents("php://input"), true);
-        //die(var_dump($phpInput));
-
-        return $this->word-> insertWord($phpInput);
+        $this->word-> insertWord($phpInput);
     }
 
-    public function delete()
+    public function delete():void
     {
         if(array_key_exists(2, $this->urlData) && !empty($this->urlData[2])){
 
             if (is_numeric($this->urlData[2])){
-                return $this->word-> deleteWord("w_id={$this->urlData[2]}");
+                $this->word-> deleteWord("w_id={$this->urlData[2]}");
             } else {
-                return$this->word-> deleteWord("word='{$this->urlData[2]}'");
+                $this->word-> deleteWord("word='{$this->urlData[2]}'");
             }
-
         } else{
-            return $this->word-> deleteAllWords();
+             $this->word-> deleteAllWords();
         }
     }
 
