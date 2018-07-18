@@ -1,6 +1,9 @@
 <?php
 namespace  WordInSyllable\Models;
 
+use WordInSyllable\Database\SqlQueryBuilder;
+use WordInSyllable\Database\WorkWithDB;
+
 class Syllable
 {
     private $s_id;
@@ -11,7 +14,15 @@ class Syllable
     {
     }
 
-    public function getSyllable(){}
+    public function getAllSyllableData()
+    {
+        $workWithDB = new WorkWithDB();
+        return $workWithDB->runQuery(
+            (new SqlQueryBuilder)
+                ->select(["s_id", "syllable"])
+                ->from("syllable")
+        );
+    }
 
 
 

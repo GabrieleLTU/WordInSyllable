@@ -1,36 +1,52 @@
 <?php
+namespace WordInSyllable\Controllers;
 
-use WordInSyllable\IntoSyllable\Word;
+use WordInSyllable\Models\Word;
 
-/**
- * Created by PhpStorm.
- * User: Gabrielė.Valaikaitė
- * Date: 7/17/18
- * Time: 5:33 PM
- */
 
 class WordController
 {
-    public function get()
+    /**
+     * @var array
+     */
+    private $urlData;
+    private $word;
+
+    public function __construct(array $urlData)
     {
-        $string = parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
-        $urlData = explode("/", $string);
+        $this->urlData = $urlData;
+        $this->word = new Word();
+    }
 
-        $word = new Word();
 
-        if(exist($urlData[2])){
+    public function get(): array
+    {
+        if(array_key_exists(2, $this->urlData) && !empty($this->urlData[2])){
 
-            if (is_numeric($urlData[2])){
-                $word-> getWordData("w_id=$urlData[2]");
+            if (is_numeric($this->urlData[2])){
+                return $this->word-> getWordData("w_id={$this->urlData[2]}");
             } else {
-                $word-> getWordData("word=$urlData[2]");
+                return$this->word-> getWordData("word='{$this->urlData[2]}'");
             }
 
         } else{
-            $word-> getAllWordsData();
+            return $this->word-> getAllWordsData();
         }
+    }
 
+    public function delete()
+    {
+        if(array_key_exists(2, $this->urlData) && !empty($this->urlData[2])){
 
+            if (is_numeric($this->urlData[2])){
+                return $this->word-> deleteWord("w_id={$this->urlData[2]}");
+            } else {
+                return$this->word-> deleteWord("word='{$this->urlData[2]}'");
+            }
+
+        } else{
+            return $this->word-> deleteAllWords();
+        }
     }
 
 }

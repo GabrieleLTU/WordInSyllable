@@ -1,17 +1,20 @@
 <?php
-    namespace WordInSyllable\IntoSyllable;
+    namespace WordInSyllable\Models;
 
     use WordInSyllable\Database\SqlQueryBuilder;
+    use WordInSyllable\Database\WorkWithDB;
 
     class Word
     {
         protected $word;
         protected $syllableWord;
         protected $w_id;
+        private $workWithDB;
 
         function __construct($word = null)
         {
             $this->word = $word;
+            $this->workWithDB = new WorkWithDB();
         }
 
         public function setWord($word)
@@ -37,8 +40,7 @@
         public function getWordData($condition)
         {
             if (is_null($this->word)) {
-                $workWithDB = new WorkWithDB();
-                $workWithDB->runQuery(
+                return $this->workWithDB->runQuery(
                     (new SqlQueryBuilder)
                     ->select(["w_id", "word", "syllableWord"])
                     ->from("word")
@@ -46,15 +48,36 @@
                 );
 
             }
-            return $this->word;
         }
 
         public function getAllWordsData()
         {
-            $workWithDB = new WorkWithDB();
-            return $workWithDB->runQuery(
+            return $this->workWithDB->runQuery(
                 (new SqlQueryBuilder)
                     ->select(["w_id", "word", "syllableWord"])
+                    ->from("word")
+            );
+        }
+
+        public function updateWord()
+        {
+        }
+
+        public function deleteWord($condition)
+        {
+            return $this->workWithDB->runQuery(
+                (new SqlQueryBuilder)
+                    ->delete()
+                    ->from("word")
+                    ->where($condition)
+            );
+        }
+
+        public function deleteAllWords()
+        {
+            return $this->workWithDB->runQuery(
+                (new SqlQueryBuilder)
+                    ->delete()
                     ->from("word")
             );
         }

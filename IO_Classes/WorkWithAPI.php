@@ -1,8 +1,8 @@
 <?php
 namespace WordInSyllable\IO_Classes;
 
-use WordController;
 use WordInSyllable\Database\WorkWithDB;
+use WordInSyllable\Controllers\WordController;
 
 class WorkWithAPI
 {
@@ -10,7 +10,7 @@ class WorkWithAPI
 
     public function __construct()
     {
-        $this->conn = new WorkWithDB();
+       $this->conn = new WorkWithDB();
     }
 
     public function execute()
@@ -19,9 +19,14 @@ class WorkWithAPI
         $string = parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
         $urlData = explode("/", $string);
 
-        $controllerName = ucfirst(strtolower($urlData[1])) . "Controller";
-        $controller = new $controllerName();
-        $controller->$method();
+        $temp =ucfirst(strtolower($urlData[1])) . "Controller";
+        $controllerName = "\WordInSyllable\Controllers\\$temp" ;
+        //die(var_dump($controllerName));
+
+        //die(var_dump($controllerName));
+
+        $controller = new WordController($urlData);
+        var_dump($controller->$method());
 
         //---old swich
 //        switch ($method) {
@@ -60,19 +65,6 @@ class WorkWithAPI
 //                header('Allow: GET, PUT, DELETE');
 //                break;
 //        }
-    }
-
-    private function get(string $tableName, array $where): void
-    {
-        switch ($tableName){
-            case "word":
-               // get word(s) data
-                $wordController = new WordController();
-                var_dump($wordController->($where));
-                break;
-            case "syllable":
-                break;
-        }
     }
 
 //    private function get(string $tableName, int $id = NULL): void
