@@ -14,11 +14,14 @@ use WordInSyllable\Execution\Execution;
 
     $loader->addNamespace('WordInSyllable\Database', __DIR__ . '/Database');
     $loader->addNamespace('WordInSyllable\Execution', __DIR__ . '/Execution');
-    $loader->addNamespace('WordInSyllable\ExecutionTimer', __DIR__ . '/ExecutionTimer');
+    $loader->addNamespace(
+        'WordInSyllable\ExecutionTimer',
+        __DIR__ . '/ExecutionTimer'
+    );
     $loader->addNamespace('WordInSyllable\IntoSyllable', __DIR__ . '/IntoSyllable');
     $loader->addNamespace('WordInSyllable\IO_Classes', __DIR__ . '/IO_Classes');
     $loader->addNamespace('WordInSyllable\Controllers', __DIR__ . '/Controllers');
-$loader->addNamespace('WordInSyllable\Models', __DIR__ . '/Models');
+    $loader->addNamespace('WordInSyllable\Models', __DIR__ . '/Models');
 
 
     $restApi = new WorkWithAPI();

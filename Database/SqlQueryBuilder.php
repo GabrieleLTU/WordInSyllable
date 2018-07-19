@@ -41,11 +41,11 @@ class SqlQueryBuilder
      */
     public function from($tables): SqlQueryBuilder
     {
-       if (is_array($tables)) {
+        if (is_array($tables)) {
             $this->from = "FROM " . implode(", ", $tables);
-       }else {
-           $this->from = "FROM $tables";
-       }
+        } else {
+            $this->from = "FROM $tables";
+        }
 
         return $this;
     }
@@ -72,20 +72,21 @@ class SqlQueryBuilder
     {
         if (is_array($conditions)) {
             $this->where = " WHERE " . implode(" AND ", $conditions);
-        }else {
-            $this->where = " WHERE " . $conditions;
-       }
+        } else {
+             $this->where = " WHERE " . $conditions;
+        }
         return $this;
     }
 
     public function values(array $valuesByKey): SqlQueryBuilder
     {
         $this->values = "(" . implode(", ", array_keys($valuesByKey[0])) . ") VALUES ";
-        foreach ($valuesByKey as $key => $value){
+        foreach ($valuesByKey as $key => $value) {
             $this->values .= "('" .  implode("', '", $value) . "')";
-            if ($key != (count($valuesByKey)-1))  $this->values .= ", ";
+            if ($key != (count($valuesByKey) - 1)) {
+                $this->values .= ", ";
+            }
         }
-
         return $this;
     }
 
@@ -93,7 +94,7 @@ class SqlQueryBuilder
     {
         $temp = [];
         var_dump($valuesByKey);
-        foreach ($valuesByKey as $key => $value){
+        foreach ($valuesByKey as $key => $value) {
             //$temp[] = $valuesNames[$key] . "=" . $value;
             $temp[] = "$key='$value'";
         }
@@ -104,7 +105,6 @@ class SqlQueryBuilder
 
     public function __toString(): string
     {
-        echo $this->operation . " " . $this->from . " " . $this->values . " " . $this->where;
         return $this->operation . " " . $this->from . " " . $this->values . " " . $this->where;
     }
 }

@@ -10,7 +10,7 @@ class Syllablebyword
     private $w_id;
     private $workWithDB;
 
-    function __construct()
+    public function __construct()
     {
         $this->workWithDB = new WorkWithDB();
     }
@@ -45,7 +45,10 @@ class Syllablebyword
             return $this->workWithDB->selectInnerJoin(
                 ["word", "syllablebyword", "syllable"],
                 ["syllable", "syllable.s_id", "word", "word.w_id"],
-                ["word.w_id=syllablebyword.w_id", "syllablebyword.s_id=syllable.s_id"],
+                [
+                    "word.w_id=syllablebyword.w_id",
+                    "syllablebyword.s_id=syllable.s_id"
+                ],
                 $where
             );
         } catch (\Exception $e) {

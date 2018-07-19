@@ -11,7 +11,7 @@ class Syllable
     private $workWithDB;
 
 
-    function __construct($syllable = null)
+    public function __construct($syllable = null)
     {
         $this->syllable = $syllable;
         $this->workWithDB = new WorkWithDB();
@@ -19,14 +19,12 @@ class Syllable
 
     public function getSyllableData($condition):array
     {
-        if (is_null($this->syllable)) {
             $query = (new SqlQueryBuilder)
                 ->select(["s_id", "syllable"])
                 ->from("syllable")
                 ->where($condition);
 
             return $this->workWithDB->runQuery($query);
-        }
     }
 
     public function getAllSyllablesData():array
@@ -72,26 +70,5 @@ class Syllable
             ->delete()
             ->from("syllable");
         $this->workWithDB->runQuery($query);
-    }
-
-
-    public function get()
-    {
-        // TODO: Implement get() method.
-    }
-
-    public function put()
-    {
-        // TODO: Implement put() method.
-    }
-
-    public function post()
-    {
-        // TODO: Implement post() method.
-    }
-
-    public function delete()
-    {
-        // TODO: Implement delete() method.
     }
 }
