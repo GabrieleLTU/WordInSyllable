@@ -11,7 +11,7 @@ class Syllable
     private $workWithDB;
 
 
-    public function __construct($syllable = null)
+    public function __construct(string $syllable = null)
     {
         $this->syllable = $syllable;
         $this->workWithDB = new WorkWithDB();
@@ -19,7 +19,7 @@ class Syllable
 
     public function getSyllableData($condition):array
     {
-            $query = (new SqlQueryBuilder)
+            $query = (new SqlQueryBuilder())
                 ->select(["s_id", "syllable"])
                 ->from("syllable")
                 ->where($condition);
@@ -29,7 +29,7 @@ class Syllable
 
     public function getAllSyllablesData():array
     {
-        $query = (new SqlQueryBuilder)
+        $query = (new SqlQueryBuilder())
             ->select(["s_id", "syllable"])
             ->from("syllable");
 
@@ -38,7 +38,7 @@ class Syllable
 
     public function insertSyllable(array $valuesByKey):void
     {
-        $query = (new SqlQueryBuilder)
+        $query = (new SqlQueryBuilder())
             ->insertInto("syllable")
             ->values($valuesByKey);
         $this->workWithDB->runQuery($query);
@@ -46,7 +46,7 @@ class Syllable
 
     public function updateSyllable(array $valuesByKey, $condition):void
     {
-        $query = (new SqlQueryBuilder)
+        $query = (new SqlQueryBuilder())
             ->update("syllable")
             ->set($valuesByKey)
             ->where($condition);
@@ -56,7 +56,7 @@ class Syllable
 
     public function deleteSyllable($condition):void
     {
-        $query = (new SqlQueryBuilder)
+        $query = (new SqlQueryBuilder())
             ->delete()
             ->from("syllable")
             ->where($condition);
@@ -66,7 +66,7 @@ class Syllable
 
     public function deleteAllSyllables():void
     {
-        $query = (new SqlQueryBuilder)
+        $query = (new SqlQueryBuilder())
             ->delete()
             ->from("syllable");
         $this->workWithDB->runQuery($query);
