@@ -213,6 +213,7 @@ class Execution
         //$file->setFile("https://gist.githubusercontent.com/cosmologicon/1e7291714094d71a0e25678316141586/raw/006f7e9093dc7ad72b12ff9f1da649822e56d39d/tex-hyphenation-patterns.txt");
         $file->inputContent();//Data\syllable_example.txt");//
         //$file->setFile('Data\filename.txt');
+        //var_dump($file->getContent()); die();
         return $file->getContent();
     }
 

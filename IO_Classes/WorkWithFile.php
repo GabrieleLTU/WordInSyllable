@@ -36,8 +36,11 @@ class WorkWithFile implements IOinterface
     public function inputContent()
     {
         $fileContent = [];
+        //$fileContent = preg_split("/\b/", $words);
         while (!$this->fileInput->eof()) {
-            $fileContent[] = preg_replace('/[[:space:]]/', '', $this->fileInput->current());
+            $temp =  preg_split("/\b/", $this->fileInput->current());
+            //preg_replace('/[[:space:]]/', '', $this->fileInput->current());
+            $fileContent = array_merge($fileContent, $temp);
             $this->fileInput->next();
         }
         $this->fileContent = $fileContent;

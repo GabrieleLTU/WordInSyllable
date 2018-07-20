@@ -40,7 +40,7 @@ class Word
     public function getWordData($condition):?array
     {
         if (is_null($this->word)) {
-            $query = (new SqlQueryBuilder)
+            $query = (new SqlQueryBuilder())
                 ->select(["w_id", "word", "syllableWord"])
                 ->from("word")
                 ->where($condition);
@@ -51,7 +51,7 @@ class Word
 
     public function getAllWordsData():array
     {
-        $query = (new SqlQueryBuilder)
+        $query = (new SqlQueryBuilder())
             ->select(["w_id", "word", "syllableWord"])
             ->from("word");
 
@@ -60,7 +60,7 @@ class Word
 
     public function insertWord(array $valuesByKey):void
     {
-        $query = (new SqlQueryBuilder)
+        $query = (new SqlQueryBuilder())
             ->insertInto("word")
             ->values($valuesByKey);
         $this->workWithDB->runQuery($query);
@@ -68,7 +68,7 @@ class Word
 
     public function updateWord(array $valuesByKey, $condition):void
     {
-        $query = (new SqlQueryBuilder)
+        $query = (new SqlQueryBuilder())
             ->update("word")
             ->set($valuesByKey)
             ->where($condition);
@@ -78,7 +78,7 @@ class Word
 
     public function deleteWord($condition):void
     {
-        $query = (new SqlQueryBuilder)
+        $query = (new SqlQueryBuilder())
             ->delete()
             ->from("word")
             ->where($condition);
@@ -88,7 +88,7 @@ class Word
 
     public function deleteAllWords():void
     {
-        $query = (new SqlQueryBuilder)
+        $query = (new SqlQueryBuilder())
             ->delete()
             ->from("word");
          $this->workWithDB->runQuery($query);

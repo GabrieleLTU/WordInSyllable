@@ -22,7 +22,7 @@ class Syllablebyword
 
     public function getSyllablebywordData($condition):?array
     {
-            $query = (new SqlQueryBuilder)
+            $query = (new SqlQueryBuilder())
                 ->select(["w_id", "s_id"])
                 ->from("syllablebyword")
                 ->where($condition);
@@ -32,7 +32,7 @@ class Syllablebyword
 
     public function getAllSyllablebywordsData():array
     {
-        $query = (new SqlQueryBuilder)
+        $query = (new SqlQueryBuilder())
             ->select(["w_id", "s_id"])
             ->from("syllablebyword");
 
@@ -57,7 +57,7 @@ class Syllablebyword
 
     public function insertSyllablebyword(array $valuesByKey):void
     {
-        $query = (new SqlQueryBuilder)
+        $query = (new SqlQueryBuilder())
             ->insertInto("syllablebyword")
             ->values($valuesByKey);
         $this->workWithDB->runQuery($query);
@@ -65,7 +65,7 @@ class Syllablebyword
 
     public function updateSyllablebyword(array $valuesByKey, $condition):void
     {
-        $query = (new SqlQueryBuilder)
+        $query = (new SqlQueryBuilder())
             ->update("syllablebyword")
             ->set($valuesByKey)
             ->where($condition);
@@ -75,7 +75,7 @@ class Syllablebyword
 
     public function deleteSyllablebyword($condition):void
     {
-        $query = (new SqlQueryBuilder)
+        $query = (new SqlQueryBuilder())
             ->delete()
             ->from("syllablebyword")
             ->where($condition);
@@ -85,7 +85,7 @@ class Syllablebyword
 
     public function deleteAllSyllablebyword():void
     {
-        $query = (new SqlQueryBuilder)
+        $query = (new SqlQueryBuilder())
             ->delete()
             ->from("syllablebyword");
         $this->workWithDB->runQuery($query);
