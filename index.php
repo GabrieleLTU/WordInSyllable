@@ -20,6 +20,7 @@
     $loader->addNamespace('WordInSyllable\IO_Classes', __DIR__ . '/IO_Classes');
     $loader->addNamespace('WordInSyllable\Controllers', __DIR__ . '/Controllers');
     $loader->addNamespace('WordInSyllable\Models', __DIR__ . '/Models');
+    $loader->addNamespace('WordInSyllable\Logger', __DIR__ . '/Logger');
 
     if (PHP_SAPI === 'cli') {
         $execute = new Execution();

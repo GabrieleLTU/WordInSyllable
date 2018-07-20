@@ -1,7 +1,7 @@
 <?php
 namespace WordInSyllable\Controllers;
 
-use WordInSyllable\Models\Syllable;
+use WordInSyllable\Models\SyllableProxy;
 
 
 class SyllableController implements ControllerInterface
@@ -12,9 +12,8 @@ class SyllableController implements ControllerInterface
     public function __construct(array $urlData)
     {
         $this->urlData = $urlData;
-        $this->syllable = new Syllable();
+        $this->syllable = new SyllableProxy();
     }
-
 
     public function get(): array
     {

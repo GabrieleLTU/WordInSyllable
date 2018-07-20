@@ -8,6 +8,7 @@
 
 namespace WordInSyllable\Models;
 
+use WordInSyllable\Logger\FileLogger;
 
 class SyllableProxy
 {
@@ -71,11 +72,11 @@ class SyllableProxy
     public function deleteSyllable($condition):void
     {
         if (is_null($this->syllableObject)) {
-            $this->createSyllable();
+            $this->deleteSyllable();
         }
 
         if (!empty($condition)) {
-            $this->syllableObject->updateSyllable($condition);
+            $this->syllableObject->deleteSyllable($condition);
         } else {
             // return "there is no info which syllable to delete.";
         }
@@ -85,7 +86,7 @@ class SyllableProxy
     {
         try {
             if (is_null($this->syllableObject)) {
-                $this->createSyllable();
+                $this->deleteAllSyllables();
             }
             $$this->csyllableObject = new Syllable();
             $$this->csyllableObject->deleteAllSyllables();

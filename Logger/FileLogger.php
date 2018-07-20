@@ -1,15 +1,16 @@
 <?php
 namespace WordInSyllable\Logger;
 
+use SplFileObject;
+
 class FileLogger
 {
     private $file;
 
-    public function __constructor($fileName)
+    public function __construct(string $fileName)
     {
         $this->file = new SplFileObject($fileName);
     }
-
 
     /**
      * System is unusable.
