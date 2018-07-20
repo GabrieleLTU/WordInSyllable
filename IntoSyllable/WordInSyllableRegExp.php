@@ -9,7 +9,6 @@ use SplFileObject;
 final class WordInSyllableRegExp extends Word
 {
     private $position;
-    //private $syllableWord;
     private $loggerFile;
     private $dbObj;
     private $wordId;

@@ -71,15 +71,21 @@ class Execution
     {
         try {
             $syllablesArray = $this->getSyllables();
-            $db = new WorkWithDB;
+            $db = new WorkWithDB();
             $db->beginTransaction();
             $db->delete("syllable");
             $db->delete("word");
             $db->delete("syllablebyword");
+            $dot = "";
             foreach ($syllablesArray as $syllable) {
                 try {
-                    $db->insert("syllable", ["syllable"], [$syllable]);
-                    //insertSyllable($syllable);
+                        $syllable = preg_replace('/[[:space:]]+/', '', $syllable);
+                    if (strlen($syllable) > 1) {
+                        $db->insert("syllable", ["syllable"], [$dot . $syllable]);
+                        $dot = "";
+                    } else {
+                        $dot = $syllable;
+                    }
                 } catch (\Exception $e) {
                     echo $e->getMessage();
                 }
@@ -145,7 +151,7 @@ class Execution
         c - input word(s) in console;
         f - input word(s) from file;
         Your choice: ";
-        $input = fopen ("php://stdin", "r");
+        $input = fopen("php://stdin", "r");
         $choice = trim(fgets($input));
 
         switch ($choice) {
