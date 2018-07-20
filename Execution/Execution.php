@@ -1,4 +1,5 @@
 <?php
+
 namespace WordInSyllable\Execution;
 
 use WordInSyllable\Database\SqlQueryBuilder;
@@ -12,6 +13,9 @@ use WordInSyllable\Logger\FileLogger;
 
 class Execution
 {
+    const CHOICE_CONSOLE = 'c';
+    const CHOICE_FILE = 'f';
+
     public function execute()
     {
         echo "
@@ -79,7 +83,7 @@ class Execution
             $dot = "";
             foreach ($syllablesArray as $syllable) {
                 try {
-                        $syllable = preg_replace('/[[:space:]]+/', '', $syllable);
+                    $syllable = preg_replace('/[[:space:]]+/', '', $syllable);
                     if (strlen($syllable) > 1) {
                         $db->insert("syllable", ["syllable"], [$dot . $syllable]);
                         $dot = "";
@@ -103,13 +107,13 @@ class Execution
         array $syllables,
         $loggerFile = null,
         WorkWithDB $dbObj = null
-    ): array {
+    ): array
+    {
         $syllabledWordsList = [];
-        $oneELement = "";
 
         foreach ($wordsList as $words) { //wordsList - array of file/console line
             $splitWord = preg_split("/\b/", $words);//array of words of one line
-            $oneELement = "";
+            $oneElement = "";
             foreach ($splitWord as $word) {//words - one line
                 $temp = preg_replace('/[^[:alpha:]]/i', '', $word);
                 if (strlen($temp) > 0) {
@@ -118,12 +122,12 @@ class Execution
                         $loggerFile,
                         $dbObj
                     );
-                    $oneELement = $oneELement . $oneWord->wordIntoSyllable($syllables);//checkWordWithAllSyllables($syllables);
+                    $oneElement = $oneElement . $oneWord->wordIntoSyllable($syllables);//checkWordWithAllSyllables($syllables);
                 } else {
-                    $oneELement = $oneELement . $word;
+                    $oneElement = $oneElement . $word;
                 }
             }
-            $syllabledWordsList[] = $oneELement;
+            $syllabledWordsList[] = $oneElement;
         }
         return $syllabledWordsList;
     }
@@ -132,7 +136,8 @@ class Execution
         array $words,
         array $syllables,
         $loggerFile = null
-    ):array {
+    ): array
+    {
         $syllabledWordsList = [];
 
         foreach ($words as $word) {
@@ -147,28 +152,24 @@ class Execution
     private function getWords(): array
     {
         $wordsList = [];
-        echo "
-        c - input word(s) in console;
-        f - input word(s) from file;
-        Your choice: ";
+        echo "c - input word(s) in console;\nf - input word(s) from file;"
+            . "Your choice: ";
         $input = fopen("php://stdin", "r");
         $choice = trim(fgets($input));
 
         switch ($choice) {
-            case 'c':
+            case self::CHOICE_CONSOLE:
                 $wordsList = $this->getDataFromConsole();
                 break;
-            case 'f':
+            case self::CHOICE_FILE:
                 $wordsList = $this->getDataFromFile();
                 break;
             default:
-                $error = "Your choice is not correct. \n";
-                throw new \Exception($error);
+                throw new \Exception("Your choice is not correct.");
                 break;
         }
         if (is_null($wordsList)) {
-            $error = 'There is no words...';
-            throw new \Exception($error);
+            throw new \Exception('There is no words...');
         }
         return $wordsList;
     }
@@ -185,10 +186,10 @@ class Execution
         $choice = trim(fgets($input));
 
         switch ($choice) {
-            case 'c':
+            case self::CHOICE_CONSOLE:
                 $syllablesList = $this->getDataFromConsole();
                 break;
-            case 'f':
+            case self::CHOICE_FILE:
                 $syllablesList = $this->getDataFromFile();
                 break;
             case 'd':
@@ -204,11 +205,15 @@ class Execution
             default:
                 $error = "Your choice is not correct. \n";
                 throw new \Exception($error);
-                    break;
+                break;
         }
-            return $syllablesList;
+        return $syllablesList;
     }
 
+    /**
+     * @return array
+     * Originally data is taken from: https://gist.githubusercontent.com/cosmologicon/1e7291714094d71a0e25678316141586/raw/006f7e9093dc7ad72b12ff9f1da649822e56d39d/tex-hyphenation-patterns.txt
+     */
     private function getDataFromFile(): array
     {
         $file = new WorkWithFile();
@@ -216,10 +221,8 @@ class Execution
         $input = fopen("php://stdin", "r");
         $choice = trim(fgets($input));
         $file->setInputFile($choice);
-        //$file->setFile("https://gist.githubusercontent.com/cosmologicon/1e7291714094d71a0e25678316141586/raw/006f7e9093dc7ad72b12ff9f1da649822e56d39d/tex-hyphenation-patterns.txt");
-        $file->inputContent();//Data\syllable_example.txt");//
-        //$file->setFile('Data\filename.txt');
-        //var_dump($file->getContent()); die();
+        $file->inputContent();
+
         return $file->getContent();
     }
 
@@ -257,14 +260,13 @@ class Execution
         $choice = trim(fgets($input));
 
         switch ($choice) {
-            case 'c':
+            case self::CHOICE_CONSOLE:
                 $output = new WorkWithConsole();
                 break;
-            case 'f':
+            case self::CHOICE_FILE:
                 $output = new WorkWithFile();
                 echo "Write file destination:\n";
-                $input = fopen("php://stdin", "r");
-                $choice = trim(fgets($input));
+                $choice = trim(fgets(STDIN));
                 $output->setOutputFile($choice);
                 //$output->setFile("Data\SyllableWords.txt");
                 break;
@@ -289,6 +291,7 @@ class Execution
                 for ($i = 0; $i < count($syllableToOutput); $i++) {
                     $syllableToOutput2[] = $syllableToOutput[$i]["syllable"];
                 }
+
                 $syllableToOutput2 = (count($syllableToOutput2) == 1) ? " " : $syllableToOutput2;
                 $output->setContent($syllableToOutput2);
                 $output->outputContent();

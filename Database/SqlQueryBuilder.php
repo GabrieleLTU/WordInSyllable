@@ -92,13 +92,12 @@ class SqlQueryBuilder
 
     public function set(array $valuesByKey): SqlQueryBuilder
     {
-        $temp = [];
-        var_dump($valuesByKey);
+        $keyValues = [];
         foreach ($valuesByKey as $key => $value) {
             //$temp[] = $valuesNames[$key] . "=" . $value;
-            $temp[] = "$key='$value'";
+            $keyValues[] = "$key='$value'";
         }
-        $this->values =  " SET " . implode(", ", $temp);
+        $this->values =  " SET " . implode(", ", $keyValues);
 
         return $this;
     }

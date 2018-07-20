@@ -21,45 +21,42 @@ class SyllableProxy
         $this->loggerFile = new FileLogger("Data\logger_execute.txt");
     }
 
-    public function createSyllable(string $syllable = null):void
-    {
-        $this->syllable = $syllable;
-        $this->syllableObject = new Syllable($syllable);
-    }
-
-    public function getSyllableData($condition):array
+    public function getSyllableInstance(string $syllable = null): void
     {
         if (is_null($this->syllableObject)) {
-            $this->createSyllable();
-            return $this->syllableObject->getSyllableData($condition);
-        } else {
-            return [];//"there is no condition"
+            $this->syllableObject = new Syllable($syllable);
         }
     }
 
-    public function getAllSyllablesData():array
+    public function getSyllableData($condition): array
+    {
+        if (is_null($this->syllableObject)) {
+            $this->getSyllableInstance();
+        }
+        return $this->syllableObject->getSyllableData($condition);
+    }
+
+    public function getAllSyllablesData(): array
     {
         $syllableObject = new Syllable();
         return $syllableObject->getAllSyllablesData();
     }
 
-    public function insertSyllable(array $valuesByKey):void
+    public function insertSyllable(array $valuesByKey): void
     {
-        if (is_null($this->syllableObject)) {
-            $this->createSyllable();
-        }
+        $this->getSyllableInstance();
 
         if (!empty($valuesByKey)) {
             $this->syllableObject->insertSyllable($valuesByKey);
         } else {
-           // return [];
+            // return [];
         }
     }
 
-    public function updateSyllable(array $valuesByKey, $condition):void
+    public function updateSyllable(array $valuesByKey, $condition): void
     {
         if (is_null($this->syllableObject)) {
-            $this->createSyllable();
+            $this->getSyllableInstance();
         }
 
         if (!empty($valuesByKey)) {
@@ -69,10 +66,10 @@ class SyllableProxy
         }
     }
 
-    public function deleteSyllable($condition):void
+    public function deleteSyllable($condition): void
     {
         if (is_null($this->syllableObject)) {
-            $this->createSyllable();
+            $this->getSyllableInstance();
         }
 
         if (!empty($condition)) {
@@ -82,14 +79,14 @@ class SyllableProxy
         }
     }
 
-    public function deleteAllSyllables():void
+    public function deleteAllSyllables(): void
     {
         try {
             if (is_null($this->syllableObject)) {
-                $this->createSyllable();
+                $this->getSyllableInstance();
             }
-            $$this->csyllableObject = new Syllable();
-            $$this->csyllableObject->deleteAllSyllables();
+            $this->syllableObject = new Syllable();
+            $this->syllableObject->deleteAllSyllables();
             $this->loggerFile->info(
                 "All Syllables was deleted from database"
             );

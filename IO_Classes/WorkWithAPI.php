@@ -1,4 +1,5 @@
 <?php
+
 namespace WordInSyllable\IO_Classes;
 
 use WordInSyllable\Database\WorkWithDB;
@@ -9,7 +10,7 @@ class WorkWithAPI
 
     public function __construct()
     {
-       $this->conn = new WorkWithDB();
+        $this->conn = new WorkWithDB();
     }
 
     public function execute()
@@ -18,8 +19,8 @@ class WorkWithAPI
         $string = parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
         $urlData = explode("/", $string);
 
-        $temp =ucfirst(strtolower($urlData[1])) . "Controller";
-        $controllerName = "\WordInSyllable\Controllers\\$temp" ;
+        $temp = ucfirst(strtolower($urlData[1])) . "Controller";
+        $controllerName = "\WordInSyllable\Controllers\\$temp";
         //die(var_dump($controllerName));
 
         //die(var_dump($controllerName));

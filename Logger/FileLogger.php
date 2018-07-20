@@ -61,7 +61,7 @@ class FileLogger
 
     public function log($level, $message, array $context = array())
     {
-        $content = '[' . date('Y-m-d H:i:s') . '] ' . $level . ':' . $message . "\n";
+        $content = '[' . date('Y-m-d H:i:s') . '] ' . $level . ':' . $message . $context . "\n";
         //file_put_contents($this->file, $content, FILE_APPEND);
         $this->file->fwrite($content);
     }

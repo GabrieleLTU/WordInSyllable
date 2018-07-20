@@ -2,7 +2,7 @@
 namespace WordInSyllable\Controllers;
 
 
-interface ControllerInterface
+interface ControllerInterface // class
 {
     public function __construct(array $urlData);
     public function get();
