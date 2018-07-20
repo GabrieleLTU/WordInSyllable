@@ -72,7 +72,7 @@ class SyllableProxy
     public function deleteSyllable($condition):void
     {
         if (is_null($this->syllableObject)) {
-            $this->deleteSyllable();
+            $this->createSyllable();
         }
 
         if (!empty($condition)) {
@@ -86,7 +86,7 @@ class SyllableProxy
     {
         try {
             if (is_null($this->syllableObject)) {
-                $this->deleteAllSyllables();
+                $this->createSyllable();
             }
             $$this->csyllableObject = new Syllable();
             $$this->csyllableObject->deleteAllSyllables();
