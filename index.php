@@ -2,14 +2,12 @@
     require_once 'Autoloader.php';
 
     use WordInSyllable\Autoloader;
-    use WordInSyllable\Database\SqlQueryBuilder;
     use WordInSyllable\Database\WorkWithDB;
     use WordInSyllable\Execution\Execution;
     use WordInSyllable\IO_Classes\WorkWithAPI;
 
-// instantiate the loader
+
     $loader = new Autoloader();
-    // register the autoloader
     $loader->register();
 
     $loader->addNamespace('WordInSyllable\Database', __DIR__ . '/Database');
