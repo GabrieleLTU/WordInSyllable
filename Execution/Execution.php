@@ -1,6 +1,7 @@
 <?php
 namespace WordInSyllable\Execution;
 
+use WordInSyllable\Database\SqlQueryBuilder;
 use WordInSyllable\Database\WorkWithDB;
 use WordInSyllable\IntoSyllable\WordInSyllable;
 use WordInSyllable\IntoSyllable\WordInSyllableRegExp;
@@ -226,7 +227,11 @@ class Execution
     private function getSyllablesFromDatabase(WorkWithDB $dbObj): array
     {
         try {
-            return $dbObj->selectSyllables();
+            $query = (new SqlQueryBuilder())
+                ->select(["syllable"])
+                ->from("syllable");
+
+            return array_column($dbObj->runQuery($query), "syllable");
         } catch (\Exception $e) {
             $error = "Database fail: " . $e->getMessage() . "\n";
             throw new \Exception($error);

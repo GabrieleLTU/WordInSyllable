@@ -3,8 +3,8 @@
 
     use WordInSyllable\Autoloader;
     use WordInSyllable\Database\SqlQueryBuilder;
-use WordInSyllable\Database\WorkWithDB;
-use WordInSyllable\Execution\Execution;
+    use WordInSyllable\Database\WorkWithDB;
+    use WordInSyllable\Execution\Execution;
     use WordInSyllable\IO_Classes\WorkWithAPI;
 
 // instantiate the loader
@@ -23,17 +23,9 @@ use WordInSyllable\Execution\Execution;
     $loader->addNamespace('WordInSyllable\Controllers', __DIR__ . '/Controllers');
     $loader->addNamespace('WordInSyllable\Models', __DIR__ . '/Models');
 
-
-    $restApi = new WorkWithAPI();
-    $restApi->execute();
-
-//    $execute = new Execution();
-//    $execute->execute();
-
-//    $query = (new SqlQueryBuilder)
-//        ->update("word")
-//        ->set(["word", "sylableWord"],["word1", "wo-rd1"])
-//        ->where("w_id=2");
-//
-//     var_dump((string)$query);
-
+    if (PHP_SAPI === 'cli') {
+        $execute = new Execution();
+    } else {
+        $execute = new WorkWithAPI();
+    }
+        $execute->execute();
