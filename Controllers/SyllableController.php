@@ -5,8 +5,9 @@ namespace WordInSyllable\Controllers;
 use WordInSyllable\Models\SyllableProxy;
 
 
-class SyllableController implements ControllerInterface
+class SyllableController //implements ControllerInterface
 {
+    const SYLLABLE_IDENTIFIER = 2; //concrete syllable id or syllable (word);
     private $urlData = [];
     private $syllable = null;
 
@@ -18,13 +19,17 @@ class SyllableController implements ControllerInterface
 
     public function get(): array
     {
-        if (!empty($this->urlData[2])) {
-            if (is_numeric($this->urlData[2])) {
+        if (!empty($this->urlData[self::SYLLABLE_IDENTIFIER])) {
+            if (is_numeric($this->urlData[self::SYLLABLE_IDENTIFIER])) {
                 return $this->syllable
-                    ->getSyllableData("s_id={$this->urlData[2]}");
+                    ->getSyllableData(
+                        "s_id={$this->urlData[self::SYLLABLE_IDENTIFIER]}"
+                    );
             } else {
                 return $this->syllable
-                    ->getSyllableData("syllable='{$this->urlData[2]}'");
+                    ->getSyllableData(
+                        "syllable='{$this->urlData[self::SYLLABLE_IDENTIFIER]}'"
+                    );
             }
         } else {
             return $this->syllable->getAllSyllablesData();
@@ -35,15 +40,15 @@ class SyllableController implements ControllerInterface
     {
         $phpInput = json_decode(file_get_contents("php://input"), true);
 
-        if (is_numeric($this->urlData[2])) {
+        if (is_numeric($this->urlData[self::SYLLABLE_IDENTIFIER])) {
             $this->syllable->updateSyllable(
                 $phpInput,
-                "s_id={$this->urlData[2]}"
+                "s_id={$this->urlData[self::SYLLABLE_IDENTIFIER]}"
             );
         } else {
             $this->syllable->updateSyllable(
                 $phpInput,
-                "syllable='{$this->urlData[2]}'"
+                "syllable='{$this->urlData[self::SYLLABLE_IDENTIFIER]}'"
             );
         }
     }
@@ -56,15 +61,20 @@ class SyllableController implements ControllerInterface
 
     public function delete(): void
     {
-        if (array_key_exists(2, $this->urlData) && !empty($this->urlData[2])) {
-            if (is_numeric($this->urlData[2])) {
-                $this->syllable->deleteSyllable("s_id={$this->urlData[2]}");
+        if (array_key_exists(self::SYLLABLE_IDENTIFIER, $this->urlData) &&
+            !empty($this->urlData[self::SYLLABLE_IDENTIFIER])
+        ) {
+            if (is_numeric($this->urlData[self::SYLLABLE_IDENTIFIER])) {
+                $this->syllable->deleteSyllable(
+                    "s_id={$this->urlData[self::SYLLABLE_IDENTIFIER]}"
+                );
             } else {
-                $this->syllable->deleteSyllable("syllable='{$this->urlData[2]}'");
+                $this->syllable->deleteSyllable(
+                    "syllable='{$this->urlData[self::SYLLABLE_IDENTIFIER]}'"
+                );
             }
         } else {
             $this->syllable->deleteAllSyllables();
         }
     }
-
 }

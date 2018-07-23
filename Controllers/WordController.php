@@ -6,9 +6,7 @@ use WordInSyllable\Models\Word;
 
 class WordController implements ControllerInterface
 {
-    /**
-     * @var array
-     */
+    const WORD_IDENTIFIER = 2;
     private $urlData = [];
     private $word = null;
 
@@ -21,11 +19,11 @@ class WordController implements ControllerInterface
 
     public function get(): array
     {
-        if (array_key_exists(2, $this->urlData) && !empty($this->urlData[2])) {
-            if (is_numeric($this->urlData[2])) {
-                return $this->word-> getWordData("w_id={$this->urlData[2]}");
+        if (array_key_exists(self::WORD_IDENTIFIER, $this->urlData) && !empty($this->urlData[self::WORD_IDENTIFIER])) {
+            if (is_numeric($this->urlData[self::WORD_IDENTIFIER])) {
+                return $this->word-> getWordData("w_id={$this->urlData[self::WORD_IDENTIFIER]}");
             } else {
-                return $this->word-> getWordData("word='{$this->urlData[2]}'");
+                return $this->word-> getWordData("word='{$this->urlData[self::WORD_IDENTIFIER]}'");
             }
         } else {
             return $this->word-> getAllWordsData();
@@ -36,10 +34,10 @@ class WordController implements ControllerInterface
     {
         $phpInput = json_decode(file_get_contents("php://input"), true);
 
-        if (is_numeric($this->urlData[2])) {
-            $this->word-> updateWord($phpInput, "w_id={$this->urlData[2]}");
+        if (is_numeric($this->urlData[self::WORD_IDENTIFIER])) {
+            $this->word-> updateWord($phpInput, "w_id={$this->urlData[self::WORD_IDENTIFIER]}");
         } else {
-            $this->word-> updateWord($phpInput, "word='{$this->urlData[2]}'");
+            $this->word-> updateWord($phpInput, "word='{$this->urlData[self::WORD_IDENTIFIER]}'");
         }
     }
 
@@ -51,11 +49,11 @@ class WordController implements ControllerInterface
 
     public function delete():void
     {
-        if (array_key_exists(2, $this->urlData) && !empty($this->urlData[2])) {
-            if (is_numeric($this->urlData[2])) {
-                $this->word-> deleteWord("w_id={$this->urlData[2]}");
+        if (array_key_exists(self::WORD_IDENTIFIER, $this->urlData) && !empty($this->urlData[self::WORD_IDENTIFIER])) {
+            if (is_numeric($this->urlData[self::WORD_IDENTIFIER])) {
+                $this->word-> deleteWord("w_id={$this->urlData[self::WORD_IDENTIFIER]}");
             } else {
-                $this->word-> deleteWord("word='{$this->urlData[2]}'");
+                $this->word-> deleteWord("word='{$this->urlData[self::WORD_IDENTIFIER]}'");
             }
         } else {
              $this->word-> deleteAllWords();

@@ -8,6 +8,7 @@
 
 namespace WordInSyllable\Models;
 
+use WordInSyllable\Database\WorkWithDB;
 use WordInSyllable\Logger\FileLogger;
 
 class SyllableProxy
@@ -18,20 +19,20 @@ class SyllableProxy
 
     public function __construct()
     {
-        $this->loggerFile = new FileLogger("Data\logger_execute.txt");
+        //$this->loggerFile = new FileLogger("Data\logger_execute.txt");
     }
 
-    public function getSyllableInstance(string $syllable = null): void
+    public function getAndCreateSyllable(string $syllable = null): void
     {
         if (is_null($this->syllableObject)) {
-            $this->syllableObject = new Syllable($syllable);
+            $this->syllableObject = new Syllable(new WorkWithDB(), $syllable);
         }
     }
 
     public function getSyllableData($condition): array
     {
         if (is_null($this->syllableObject)) {
-            $this->getSyllableInstance();
+            $this->getAndCreateSyllable();
         }
         return $this->syllableObject->getSyllableData($condition);
     }
@@ -44,7 +45,7 @@ class SyllableProxy
 
     public function insertSyllable(array $valuesByKey): void
     {
-        $this->getSyllableInstance();
+        $this->getAndCreateSyllable();
 
         if (!empty($valuesByKey)) {
             $this->syllableObject->insertSyllable($valuesByKey);
@@ -56,7 +57,7 @@ class SyllableProxy
     public function updateSyllable(array $valuesByKey, $condition): void
     {
         if (is_null($this->syllableObject)) {
-            $this->getSyllableInstance();
+            $this->getAndCreateSyllable();
         }
 
         if (!empty($valuesByKey)) {
@@ -69,7 +70,7 @@ class SyllableProxy
     public function deleteSyllable($condition): void
     {
         if (is_null($this->syllableObject)) {
-            $this->getSyllableInstance();
+            $this->getAndCreateSyllable();
         }
 
         if (!empty($condition)) {
@@ -83,7 +84,7 @@ class SyllableProxy
     {
         try {
             if (is_null($this->syllableObject)) {
-                $this->getSyllableInstance();
+                $this->getAndCreateSyllable();
             }
             $this->syllableObject = new Syllable();
             $this->syllableObject->deleteAllSyllables();

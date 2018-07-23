@@ -1,4 +1,5 @@
 <?php
+
 namespace WordInSyllable\IO_Classes;
 
 class WorkWithConsole implements IOinterface
@@ -18,14 +19,13 @@ class WorkWithConsole implements IOinterface
     }
 
     /**
-    * read the input and save it in the array (as one element)
-    *@return null or nothing
-    */
+     * read the input and save it in the array (as one element)
+     * @return null or nothing
+     */
     public function inputContent()
     {
         echo "Input: ";
-        $input = fopen("php://stdin", "r");
-        $line = trim(fgets($input));
+        $line = trim(fgets(STDIN));
         //var_dump(strlen(trim(fgets($input))));
         if (strlen($line) === 0) {
             return null;
@@ -43,10 +43,10 @@ class WorkWithConsole implements IOinterface
     {
         if (is_array($this->consoleContent)) {
             foreach ($this->consoleContent as $oneElement) {
-                echo $oneElement . "\n";
+                echo $oneElement . PHP_EOL;
             }
         } else {
-            echo $this->consoleContent . "\n";
+            echo "{$this->consoleContent}\n";
         }
     }
 
@@ -59,7 +59,7 @@ class WorkWithConsole implements IOinterface
             echo $content;
         } else {
             foreach ($content as $oneElement) {
-                echo $oneElement . "\n";
+                echo $oneElement;
             }
         }
     }
