@@ -39,8 +39,10 @@ class SyllableProxy
 
     public function getAllSyllablesData(): array
     {
-        $syllableObject = new Syllable();
-        return $syllableObject->getAllSyllablesData();
+        if (is_null($this->syllableObject)) {
+            $this->getAndCreateSyllable();
+        }
+        return $this->syllableObject->getAllSyllablesData();
     }
 
     public function insertSyllable(array $valuesByKey): void
