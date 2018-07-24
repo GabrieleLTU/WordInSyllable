@@ -6,8 +6,9 @@ use WordInSyllable\Database\WorkWithDB;
 
 class Syllablebyword
 {
-    private $s_id;
-    private $w_id;
+    const  TABLE_NAME = "syllablebyword";
+    private $syllableId;
+    private $wordId;
     private $workWithDB;
 
     public function __construct()
@@ -17,14 +18,14 @@ class Syllablebyword
 
     public function getSyllablebyword():array
     {
-        return [$this->s_id, $this->w_id];
+        return [$this->syllableId, $this->wordId];
     }
 
     public function getSyllablebywordData($condition):?array
     {
             $query = (new SqlQueryBuilder())
                 ->select(["w_id", "s_id"])
-                ->from("syllablebyword")
+                ->from(self::TABLE_NAME)
                 ->where($condition);
 
             return $this->workWithDB->runQuery($query);
@@ -34,7 +35,7 @@ class Syllablebyword
     {
         $query = (new SqlQueryBuilder())
             ->select(["w_id", "s_id"])
-            ->from("syllablebyword");
+            ->from(self::TABLE_NAME);
 
         return $this->workWithDB->runQuery($query);
     }
@@ -43,7 +44,7 @@ class Syllablebyword
     {
         try {
             return $this->workWithDB->selectInnerJoin(
-                ["word", "syllablebyword", "syllable"],
+                ["word", self::TABLE_NAME, "syllable"],
                 ["syllable", "syllable.s_id", "word", "word.w_id"],
                 [
                     "word.w_id=syllablebyword.w_id",
@@ -58,7 +59,7 @@ class Syllablebyword
     public function insertSyllablebyword(array $valuesByKey):void
     {
         $query = (new SqlQueryBuilder())
-            ->insertInto("syllablebyword")
+            ->insertInto(self::TABLE_NAME)
             ->values($valuesByKey);
         $this->workWithDB->runQuery($query);
     }
@@ -66,7 +67,7 @@ class Syllablebyword
     public function updateSyllablebyword(array $valuesByKey, $condition):void
     {
         $query = (new SqlQueryBuilder())
-            ->update("syllablebyword")
+            ->update(self::TABLE_NAME)
             ->set($valuesByKey)
             ->where($condition);
 
@@ -77,7 +78,7 @@ class Syllablebyword
     {
         $query = (new SqlQueryBuilder())
             ->delete()
-            ->from("syllablebyword")
+            ->from(self::TABLE_NAME)
             ->where($condition);
 
         $this->workWithDB->runQuery($query);
@@ -87,7 +88,7 @@ class Syllablebyword
     {
         $query = (new SqlQueryBuilder())
             ->delete()
-            ->from("syllablebyword");
+            ->from("self::TABLE_NAME");
         $this->workWithDB->runQuery($query);
     }
 }

@@ -1,6 +1,7 @@
 <?php
 namespace WordInSyllable\Controllers;
 
+use GuzzleHttp\Psr7\Response;
 use WordInSyllable\Models\Word;
 
 
@@ -41,10 +42,12 @@ class WordController implements ControllerInterface
         }
     }
 
-    public function post():void
+    public function post():Response
     {
         $phpInput = json_decode(file_get_contents("php://input"), true);
         $this->word-> insertWord($phpInput);
+
+        return new Response(201);
     }
 
     public function delete():void

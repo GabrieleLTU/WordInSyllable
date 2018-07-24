@@ -9,9 +9,11 @@
 namespace WordInSyllable\tests;
 
 require __DIR__ . '/../Controllers/SyllableController.php';
-require __DIR__. '/../Models/SyllableProxy.php';
+require __DIR__ . '/../Controllers/ControllerInterface.php';
+require __DIR__ . '/../Models/SyllableProxy.php';
 
 use PHPUnit\Framework\TestCase;
+use WordInSyllable\Controllers\ControllerInterface;
 use WordInSyllable\Controllers\SyllableController;
 use WordInSyllable\Models\SyllableProxy;
 
@@ -25,6 +27,7 @@ class SyllableControllerTests extends TestCase
     private $syllableControllerWithSyllableId;
     private $syllableControllerWithSyllableWord;
     private $syllableProxy;
+    private $controllerInterface;
 
     public function setUp()
     {
@@ -38,6 +41,7 @@ class SyllableControllerTests extends TestCase
             new SyllableController(self::WITH_SYLLABLE_WORD);
 
         $this->syllableProxy = $this->createMock(SyllableProxy::class);
+        $this->controllerInterface = $this->createMock(ControllerInterface::class);
     }
 
     public function testGet()
