@@ -49,20 +49,6 @@ class SqlQueryBuilder
 
         return $this;
     }
-    /**
-     * @param $tables - array|string
-     * @return SqlQueryBuilder
-     */
-//    public function join($tables, $onCondition): SqlQueryBuilder
-//    {
-//        if (is_array($tables)) {
-//            $this->from = "FROM " . implode(", ", $tables);
-//        }else {
-//            $this->from = "FROM $tables";
-//        }
-//
-//        return $this;
-//    }
 
     /**
      * @param $conditions - array|string
@@ -94,16 +80,15 @@ class SqlQueryBuilder
     {
         $keyValues = [];
         foreach ($valuesByKey as $key => $value) {
-            //$temp[] = $valuesNames[$key] . "=" . $value;
-            $keyValues[] = "$key='$value'";
+            $keyValues[] = "{$key}='{$value}'";//:{$key}";/
         }
         $this->values =  " SET " . implode(", ", $keyValues);
-
+        //NEED TO PREPARE
         return $this;
     }
 
     public function __toString(): string
     {
-        return $this->operation . " " . $this->from . " " . $this->values . " " . $this->where;
+        return "{$this->operation}  {$this->from} {$this->values} {$this->where} ";
     }
 }
