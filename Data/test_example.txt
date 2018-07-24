@@ -1,0 +1,31 @@
+... extends TestCase
+
+public f. setup()
+{
+    $this->someClass = $this->createMock(someClass::class);
+    etc.
+
+    $this->objSomeClass = new someClass($this->someClass, etc.)
+
+}
+
+public func testFunctionName(): returnType
+{
+//arrange:
+    $expected = [
+        'id' => 2,
+        'etc' => realData
+    ]; /// fit formate
+
+//action:
+    $this->class->method('functionName')->willReturn($expected);
+    $output = $this->class->methodResultOutputFunction();//added breakpoint in class
+
+//assert:
+    $this->assertSame($expected, etc);//assertEq
+
+}
+
+//success - kai iki paskutinio return'o
+// run with coverage
+//OnConsecutiveCalls (param1, param2);

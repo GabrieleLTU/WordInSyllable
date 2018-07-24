@@ -9,9 +9,12 @@
 namespace WordInSyllable\tests;
 
 use PHPUnit\Framework\TestCase;
+use GuzzleHttp;
 
-class ApiTests  extends TestCase
+class ApiTests extends TestCase
 {
+    private $client;
+
     protected function setUp()
     {
         $this->client = new GuzzleHttp\Client([
@@ -19,34 +22,8 @@ class ApiTests  extends TestCase
         ]);
     }
 
-
     public function testPOST()
     {
-        // create our http client (Guzzle)
-        $client = new Client('http://application.local', array(
-            'request.options' => array(
-                'exceptions' => false,
-            )
-        ));
-
-        $jsonData = [
-            ['word' => "hovercraft", 'syllableWord' => "ho-ver-craft"],
-            ['word' => "otherWord", 'syllableWord' => null]
-        ];
-
-        $request = $client->post('/api/programmers', null, json_encode($jsonData));
-        $response = $request->send();
-
-        $this->assertEquals(201, $response->getStatusCode());
-        $this->assertTrue($response->hasHeader('Location'));
-        //$data = json_decode($response->getBody(true), true);
-        //$this->assertArrayHasKey('nickname', $data);
-    }
-
-    public function testPOST2()
-    {
-        //$bookId = uniqid();
-
         $response = $this->client->post('/word/', [
             'json' => [
                 'word' => 'hovercraft2',
@@ -54,10 +31,20 @@ class ApiTests  extends TestCase
             ]
         ]);
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(201, $response->getStatusCode());
 
         $data = json_decode($response->getBody(), true);
 
-        //$this->assertEquals($bookId, $data['bookId']);
+        //$this->assertEquals($response, $data);
+
+    }
+
+    public function testDeleteError()
+    {
+//        $response = $this->client->delete('/books/random-book', [
+//            'http_errors' => false
+//        ]);
+//
+//        $this->assertEquals(405, $response->getStatusCode());
     }
 }
