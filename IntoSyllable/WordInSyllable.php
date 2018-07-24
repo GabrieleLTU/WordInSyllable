@@ -65,19 +65,6 @@ class WordInSyllable extends Word
         $this->saveWordSylables();
     }
 
-//   private function checkAnywereInWord ($syllable, $searchStart)
-//    {
-//      $syllableNoNumber = preg_replace('/[0-9]+/', '', $syllable);
-//      $syllableNoNumber = str_replace('.','',$syllableNoNumber);
-//      $sylStart = stripos ($this->word, $syllableNoNumber, $searchStart);
-//      while ($sylStart !== FALSE) {
-//        //change $position array
-//        $this->changePosition($syllable, $sylStart);
-//        $sylStart = stripos(
-//          $this->word, $syllableNoNumber, $sylStart + strlen($syllableNoNumber));
-//      }
-//    }
-
     private function changePosition($syllable, $sylStart)
     {
         $position = $this->position;
