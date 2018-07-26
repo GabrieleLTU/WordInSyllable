@@ -8,7 +8,7 @@ use SplFileObject;
 class WordInSyllable extends Word
 {
     private $position;
-    //private $syllableWord;
+    private $syllableWord;
     private $loggerFile;
 
     public function __construct($word, $loggerFile)

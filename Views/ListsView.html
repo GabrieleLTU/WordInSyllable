@@ -96,9 +96,16 @@
                 tabCell.innerHTML = data[i][col[j]];
             }
             var tabCell = tr.insertCell(-1);
-            tabCell.innerHTML = '<a data-toggle="modal" data-target="#updateModal" class="updateElement" data-entityData=' + data[i] + '>update</a>';
+
+            var entityData =  JSON.stringify(data[i]);//jQuery.parseJSON
+            console.log(data[i]);
+            console.log(entityData);
+
+            tabCell.innerHTML = '<a data-toggle="modal" href="#updateModal" ' +
+                'data-target="#updateModal" class="updateElement" data-entity-data="' + data[i] + '">update</a>';
+
             var tabCell = tr.insertCell(-1);
-            tabCell.innerHTML = "<a onclick='deleteElement(&quot;" + tableName + "&quot;, " + data[i][col[0]] + ")'>delete</a>";
+            tabCell.innerHTML = "<a onclick='deleteElement(`" + tableName +"`,  " + data[i][col[0]] + ")'>delete</a>";
         }
 
         // FINALLY ADD THE NEWLY CREATED TABLE WITH JSON DATA TO A CONTAINER.
@@ -134,9 +141,9 @@
 
         $.ajax({
             type: "PUT",
-            url: "http://application.local/word/4",
+            url: "http://application.local/" + word + "/" + id,
             contentType: "application/json",
-            data: JSON.stringify({"word": "" + word+ ""}),
+            data: JSON.stringify({"word": "" + word + ""}),
             success: function(data) {
                 console.log(event);
                // alert('success');
@@ -150,6 +157,32 @@
             dataType: "json"
         });
     }
+
+    $(document).on("click", ".updateElement", function () {
+
+        var word = $(this).data('entity-data');
+        console.log($(this).data('entity-data'));
+        console.log(word);
+        //var entityData =  JSON.parse(word);//jQuery.parseJSON
+        //console.log(entityData.w_id);
+        //console.log(word);
+        //console.log(jQuery.parseJSON(word));
+        var entityData = JSON.parse(word);//JSON.stringify(
+        console.log(entityData);
+        $(".modal-body #word").val(word);
+        // As pointed out in comments,
+        // it is superfluous to have to manually call the modal.
+        // $('#addBookDialog').modal('show');
+    });
+
+//     $('#updateModal').on('show.bs.modal', function(e) {
+//
+//         //get data-id attribute of the clicked element
+//         var word = $(e.relatedTarget).data('entityData');
+// console.log(word);
+//         //populate the textbox
+//         $(e.currentTarget).find('input[name="bookId"]').val(word["word"]);
+//     });
 </script>
 <!--<script src="jquery-2.1.0.min.js"></script>-->
 </body>
@@ -167,7 +200,7 @@
                 <h4 class="modal-title" id="updateModalHeader" value=""></h4>
             </div>
             <div class="modal-body">
-                <p id="someText" >Some text in the modal.</p>
+                <!--<p id="someText" >Some text in the modal.</p>-->
                 <form id="updateForm" method="post" action="">
                     <div class="field">
                         <label for="word" style="width:25%;">word:</label>

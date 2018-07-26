@@ -2,10 +2,12 @@
 
 namespace WordInSyllable\Controllers;
 
+use GuzzleHttp\Psr7\Response;
+use HttpResponse;
 use WordInSyllable\Models\SyllableProxy;
 
 
-class SyllableController //implements ControllerInterface
+class SyllableController implements ControllerInterface
 {
     const SYLLABLE_IDENTIFIER = 2; //concrete syllable id or syllable (word);
     private $urlData = [];
@@ -53,10 +55,12 @@ class SyllableController //implements ControllerInterface
         }
     }
 
-    public function post(): void
+    public function post(): Response
     {
         $phpInput = json_decode(file_get_contents("php://input"), true);
         $this->syllable->insertSyllable($phpInput);
+
+        return new Response(201);
     }
 
     public function delete(): void

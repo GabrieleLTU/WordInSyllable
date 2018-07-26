@@ -20,7 +20,7 @@ class Execution
     {
         echo "
             w - word(s) into syllables;
-            s - added syllables to database;
+            s - add syllables to database;
             Your choice: ";
         $input = fopen("php://stdin", "r");
         $choice = trim(fgets($input));
@@ -152,8 +152,7 @@ class Execution
     private function getWords(): array
     {
         $wordsList = [];
-        echo "c - input word(s) in console;\nf - input word(s) from file;"
-            . "Your choice: ";
+        echo "c - input word(s) in console;\nf - input word(s) from file;\nYour choice: ";
         $input = fopen("php://stdin", "r");
         $choice = trim(fgets($input));
 
@@ -253,9 +252,7 @@ class Execution
      */
     private function outputContent($outputData, WorkWithDB $dbObj = null): void
     {
-        echo "Output data to:
-        c - console;
-        f -  file;\n";
+        echo "Output data to:\nc - console;\nf -  file;\n";
         $input = fopen("php://stdin", "r");
         $choice = trim(fgets($input));
 
